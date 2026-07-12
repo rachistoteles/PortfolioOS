@@ -4,9 +4,10 @@ import type { CollectionEntry } from "astro:content";
 interface Props {
   project: CollectionEntry<"projects">;
   showMedia?: boolean;
+  variant?: "default" | "compact";
 }
 
-const { project, showMedia = false } = Astro.props;
+const { project, showMedia = false, variant = "default" } = Astro.props;
 
 const statusLabels = {
   planning: "Planning",
@@ -16,44 +17,66 @@ const statusLabels = {
 } as const;
 ---
 
-<article class="project-card">
-  {
-    showMedia && (
-      <div class="project-card__media">
-        {project.data.coverImage ? (
-          <img
-            src={project.data.coverImage}
-            alt={`Preview of ${project.data.title}`}
-            loading="lazy"
-          />
-        ) : (
-          <div class="project-card__media-placeholder">
-            <span>Project media</span>
-            <small>TODO(Codex): Add optimized video preview component.</small>
-          </div>
+{
+  variant === "compact" ? (
+    <a class="project-card project-card--compact" href={`/projects/${project.id}`}>
+      <div class="project-card__content">
+        <div class="project-card__compact-heading">
+          <p class="project-card__status">{statusLabels[project.data.status]}</p>
+          <span aria-hidden="true">↗</span>
+        </div>
+        <h3>{project.data.title}</h3>
+        <p>{project.data.description}</p>
+        {project.data.technologies.length > 0 && (
+          <ul class="project-card__technologies" aria-label="Technologies">
+            {project.data.technologies
+              .slice(0, 3)
+              .map((technology) => <li>{technology}</li>)}
+          </ul>
         )}
       </div>
-    )
-  }
-
-  <div class="project-card__content">
-    <p class="project-card__status">{statusLabels[project.data.status]}</p>
-    <h2><a href={`/projects/${project.id}`}>{project.data.title}</a></h2>
-    <p>{project.data.description}</p>
-
-    {
-      project.data.technologies.length > 0 && (
-        <ul class="project-card__technologies" aria-label="Technologies">
-          {project.data.technologies.map((technology) => <li>{technology}</li>)}
-        </ul>
-      )
-    }
-
-    <a class="project-card__link" href={`/projects/${project.id}`}>
-      Explore project <span aria-hidden="true">→</span>
     </a>
-  </div>
-</article>
+  ) : (
+    <article class="project-card">
+      {
+        showMedia && (
+          <div class="project-card__media">
+            {project.data.coverImage ? (
+              <img
+                src={project.data.coverImage}
+                alt={`Preview of ${project.data.title}`}
+                loading="lazy"
+              />
+            ) : (
+              <div class="project-card__media-placeholder">
+                <span>Project media</span>
+                <small>TODO(Codex): Add optimized video preview component.</small>
+              </div>
+            )}
+          </div>
+        )
+      }
+
+      <div class="project-card__content">
+        <p class="project-card__status">{statusLabels[project.data.status]}</p>
+        <h2><a href={`/projects/${project.id}`}>{project.data.title}</a></h2>
+        <p>{project.data.description}</p>
+
+        {
+          project.data.technologies.length > 0 && (
+            <ul class="project-card__technologies" aria-label="Technologies">
+              {project.data.technologies.map((technology) => <li>{technology}</li>)}
+            </ul>
+          )
+        }
+
+        <a class="project-card__link" href={`/projects/${project.id}`}>
+          Explore project <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </article>
+  )
+}
 
 <style>
   .project-card {
@@ -62,6 +85,79 @@ const statusLabels = {
     overflow: hidden;
     border: 1px solid currentColor;
     grid-template-rows: auto 1fr;
+  }
+
+  .project-card--compact {
+    min-width: 0;
+    border-color: rgb(255 255 255 / 11%);
+    border-radius: 0.8rem;
+    background: rgb(255 255 255 / 4%);
+    color: #eaf4f1;
+    text-decoration: none;
+    transition:
+      border-color 140ms ease,
+      background 140ms ease,
+      transform 140ms ease;
+  }
+
+  .project-card--compact:hover,
+  .project-card--compact:focus-visible {
+    border-color: rgb(130 247 213 / 45%);
+    background: rgb(130 247 213 / 7%);
+    outline: 0;
+    transform: translateY(-2px);
+  }
+
+  .project-card--compact .project-card__content {
+    min-width: 0;
+    padding: clamp(0.65rem, 1.25vw, 0.9rem);
+  }
+
+  .project-card__compact-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .project-card__compact-heading > span {
+    color: #82f7d5;
+  }
+
+  .project-card--compact h3 {
+    margin: 0;
+    overflow: hidden;
+    font-size: clamp(1rem, 1.5vw, 1.3rem);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .project-card--compact .project-card__content > p:not(.project-card__status) {
+    display: -webkit-box;
+    margin: 0.4rem 0 0.55rem;
+    overflow: hidden;
+    color: #9db1ac;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .project-card--compact .project-card__status {
+    margin-bottom: 0.3rem;
+    color: #82f7d5;
+    font-size: 0.62rem;
+  }
+
+  .project-card--compact .project-card__technologies {
+    margin: auto 0 0;
+    gap: 0.3rem;
+  }
+
+  .project-card--compact .project-card__technologies li {
+    padding: 0.18rem 0.35rem;
+    border-color: rgb(130 247 213 / 22%);
+    color: #bce8dc;
+    font-size: 0.62rem;
   }
 
   .project-card__media img,
@@ -136,5 +232,11 @@ const statusLabels = {
   a:focus-visible {
     outline: 3px solid var(--focus-color);
     outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-card--compact {
+      transition: none;
+    }
   }
 </style>

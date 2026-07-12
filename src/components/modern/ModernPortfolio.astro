@@ -2,46 +2,132 @@
 import type { CollectionEntry } from "astro:content";
 
 import ProjectCard from "../shared/ProjectCard.astro";
+import ModernSidebar from "./ModernSidebar.vue";
 
 interface Props {
   projects: CollectionEntry<"projects">[];
-  postCount: number;
+  posts: CollectionEntry<"blog">[];
 }
 
-const { projects, postCount } = Astro.props;
+const { projects, posts } = Astro.props;
+const featuredProjects = projects.filter((project) => project.data.featured);
+const highlightedProject = [...projects].sort(
+  (first, second) => first.data.order - second.data.order,
+)[0];
+const latestPost = [...posts].sort(
+  (first, second) =>
+    second.data.publishedAt.getTime() - first.data.publishedAt.getTime(),
+)[0];
+
+const formatDate = (date: Date) =>
+  new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
 ---
 
-<section class="modern-portfolio" aria-labelledby="modern-title">
-  <header class="modern-hero">
-    <p class="eyebrow">Developer · Builder · Experimenter</p>
+<section class="modern-dashboard" aria-labelledby="modern-title">
+  <ModernSidebar client:load />
 
-    <h1 id="modern-title">
-      Applications with visible depth.
-    </h1>
+  <div class="modern-dashboard__content">
+    <div class="modern-masthead">
+      <aside
+        id="modern-recent"
+        class="modern-recent"
+        aria-labelledby="modern-recent-title"
+      >
+        <header>
+          <div>
+            <p class="eyebrow">Activity</p>
+            <h2 id="modern-recent-title">Recent additions</h2>
+          </div>
+          <span class="modern-live-status">Live</span>
+        </header>
 
-    <p>
-      A portfolio centered on working projects, feature
-      demonstrations, technical decisions, and development logs.
-    </p>
+        <div class="modern-recent__items">
+          {
+            latestPost ? (
+              <a href={`/blog/${latestPost.id}`}>
+                <span class="modern-recent__type">Latest journal entry</span>
+                <strong>{latestPost.data.title}</strong>
+                <small>{formatDate(latestPost.data.publishedAt)}</small>
+                <span class="modern-recent__arrow" aria-hidden="true">↗</span>
+              </a>
+            ) : (
+              <p>No journal entries published yet.</p>
+            )
+          }
 
-    <div class="modern-statistics">
-      <span>{projects.length} documented projects</span>
-      <span>{postCount} technical articles</span>
+          {
+            highlightedProject && (
+              <a href={`/projects/${highlightedProject.id}`}>
+                <span class="modern-recent__type">Highlighted project</span>
+                <strong>{highlightedProject.data.title}</strong>
+                <small>{highlightedProject.data.status.replace("-", " ")}</small>
+                <span class="modern-recent__arrow" aria-hidden="true">↗</span>
+              </a>
+            )
+          }
+        </div>
+      </aside>
+
+      <header id="modern-overview" class="modern-hero">
+        <p class="eyebrow">Computer Engineer · Independent Developer</p>
+        <h1 id="modern-title">
+          Building useful systems with visible depth.
+        </h1>
+        <p class="modern-hero__summary">
+          Full-stack products, business tools, technical experiments, and
+          development notes—designed and built from Puerto Rico.
+        </p>
+
+        <div id="modern-about" class="modern-profile-meta">
+          <div>
+            <small>Based in</small>
+            <strong>Puerto Rico, PR</strong>
+          </div>
+          <div>
+            <small>Working as</small>
+            <strong>Independent Developer</strong>
+          </div>
+          <div>
+            <small>Languages</small>
+            <strong>English · Spanish</strong>
+          </div>
+          <div>
+            <small>Published</small>
+            <strong>{projects.length} projects · {posts.length} articles</strong>
+          </div>
+        </div>
+
+        <div class="modern-hero__links">
+          <a href="mailto:richardvb76@gmail.com">Email me</a>
+          <a href="https://richardvb.netlify.app/">Portfolio archive</a>
+        </div>
+      </header>
     </div>
-  </header>
 
-  <section aria-labelledby="featured-projects-title">
-    <header class="section-heading">
-      <p class="eyebrow">Selected work</p>
-      <h2 id="featured-projects-title">Featured projects</h2>
-    </header>
+    <section
+      id="modern-projects"
+      class="modern-projects"
+      aria-labelledby="featured-projects-title"
+    >
+      <header class="modern-projects__heading">
+        <div>
+          <p class="eyebrow">Selected work</p>
+          <h2 id="featured-projects-title">Featured projects</h2>
+        </div>
+        <a href="/projects">View all projects <span aria-hidden="true">→</span></a>
+      </header>
 
-    <div class="modern-project-grid">
-      {
-        projects.map((project) => (
-          <ProjectCard project={project} showMedia />
-        ))
-      }
-    </div>
-  </section>
+      <div class="modern-project-grid">
+        {
+          featuredProjects.map((project) => (
+            <ProjectCard project={project} variant="compact" />
+          ))
+        }
+      </div>
+    </section>
+  </div>
 </section>
