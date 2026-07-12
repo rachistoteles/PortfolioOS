@@ -1,4 +1,7 @@
 ---
+import DesktopWindow from "./DesktopWindow.vue";
+import XPTaskbar from "./XPTaskbar.vue";
+
 interface Props {
   projectCount: number;
   postCount: number;
@@ -47,42 +50,42 @@ const { projectCount, postCount } = Astro.props;
       </button>
     </nav>
 
-    <section class="xp-window" aria-labelledby="welcome-window-title">
-      <header class="xp-window__titlebar">
-        <h2 id="welcome-window-title">Welcome to PortfolioOS</h2>
-
-        <div class="xp-window__controls" aria-hidden="true">
-          <span>_</span>
-          <span>□</span>
-          <span>×</span>
-        </div>
-      </header>
-
-      <div class="xp-window__content">
-        <p>
-          Projects are the main focus of this portfolio. Each project
-          will eventually contain feature videos, technical details,
-          architecture notes, and related development logs.
-        </p>
-
-        <p class="todo-note">
-          TODO(Codex): Replace this static window with a reusable,
-          draggable and keyboard-accessible desktop-window system.
-        </p>
+    <DesktopWindow
+      client:load
+      windowId="welcome"
+      title="Welcome to PortfolioOS"
+    >
+      <div slot="menu">
+        <a href="/">File</a>
+        <a href="/projects">Projects</a>
+        <a href="/blog">Journal</a>
+        <a href="#about">Help</a>
       </div>
-    </section>
+
+      <div slot="toolbar">
+        <a href="/projects"><span aria-hidden="true">◀</span> Projects</a>
+        <a href="/blog"><span aria-hidden="true">⌕</span> Search journal</a>
+        <a href="#about"><span aria-hidden="true">📁</span> About</a>
+      </div>
+
+      <span slot="address">C:\PortfolioOS\Welcome</span>
+
+      <p>
+        Projects are the main focus of this portfolio. Each project
+        will eventually contain feature videos, technical details,
+        architecture notes, and related development logs.
+      </p>
+
+      <p>
+        Drag the title bar with a pointer, or focus it and use
+        <kbd>Alt</kbd> plus the arrow keys to move this window.
+      </p>
+    </DesktopWindow>
   </div>
 
-  <footer class="xp-taskbar">
-    <button type="button" class="start-button">
-      <span aria-hidden="true">◈</span>
-      Start
-    </button>
-
-    <div class="taskbar-app">
-      PortfolioOS
-    </div>
-
-    <time datetime="2026-07-12">Portfolio active</time>
-  </footer>
+  <XPTaskbar
+    client:load
+    windowId="welcome"
+    windowTitle="Welcome to PortfolioOS"
+  />
 </section>
