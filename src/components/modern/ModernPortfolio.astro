@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
 
+import ProjectCard from "../shared/ProjectCard.astro";
+
 interface Props {
   projects: CollectionEntry<"projects">[];
   postCount: number;
@@ -37,30 +39,7 @@ const { projects, postCount } = Astro.props;
     <div class="modern-project-grid">
       {
         projects.map((project) => (
-          <article class="modern-project-card">
-            <div class="project-media-placeholder">
-              <span>Project media</span>
-              <small>
-                TODO(Codex): Add optimized video preview component.
-              </small>
-            </div>
-
-            <div class="modern-project-card__content">
-              <p class="project-status">{project.data.status}</p>
-              <h3>{project.data.title}</h3>
-              <p>{project.data.description}</p>
-
-              <ul class="technology-list" aria-label="Technologies">
-                {project.data.technologies.map((technology) => (
-                  <li>{technology}</li>
-                ))}
-              </ul>
-
-              <a href={`/projects/${project.id}`}>
-                Explore project
-              </a>
-            </div>
-          </article>
+          <ProjectCard project={project} showMedia />
         ))
       }
     </div>

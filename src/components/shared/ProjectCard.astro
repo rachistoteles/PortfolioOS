@@ -1,0 +1,140 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  showMedia?: boolean;
+}
+
+const { project, showMedia = false } = Astro.props;
+
+const statusLabels = {
+  planning: "Planning",
+  "in-development": "In development",
+  completed: "Completed",
+  archived: "Archived",
+} as const;
+---
+
+<article class="project-card">
+  {
+    showMedia && (
+      <div class="project-card__media">
+        {project.data.coverImage ? (
+          <img
+            src={project.data.coverImage}
+            alt={`Preview of ${project.data.title}`}
+            loading="lazy"
+          />
+        ) : (
+          <div class="project-card__media-placeholder">
+            <span>Project media</span>
+            <small>TODO(Codex): Add optimized video preview component.</small>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  <div class="project-card__content">
+    <p class="project-card__status">{statusLabels[project.data.status]}</p>
+    <h2><a href={`/projects/${project.id}`}>{project.data.title}</a></h2>
+    <p>{project.data.description}</p>
+
+    {
+      project.data.technologies.length > 0 && (
+        <ul class="project-card__technologies" aria-label="Technologies">
+          {project.data.technologies.map((technology) => <li>{technology}</li>)}
+        </ul>
+      )
+    }
+
+    <a class="project-card__link" href={`/projects/${project.id}`}>
+      Explore project <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    display: grid;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid currentColor;
+    grid-template-rows: auto 1fr;
+  }
+
+  .project-card__media img,
+  .project-card__media-placeholder {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .project-card__media img {
+    object-fit: cover;
+  }
+
+  .project-card__media-placeholder {
+    display: grid;
+    padding: 1rem;
+    background: rgb(0 0 0 / 8%);
+    place-content: center;
+    text-align: center;
+  }
+
+  .project-card__media-placeholder small {
+    max-width: 18rem;
+    margin-top: 0.35rem;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  }
+
+  .project-card__content {
+    display: flex;
+    padding: 1.5rem;
+    flex-direction: column;
+  }
+
+  .project-card__status {
+    margin: 0 0 0.5rem;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+  }
+
+  h2 a {
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.15em;
+  }
+
+  .project-card__technologies {
+    display: flex;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    list-style: none;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .project-card__technologies li {
+    padding: 0.3rem 0.5rem;
+    border: 1px solid currentColor;
+    font-size: 0.78rem;
+  }
+
+  .project-card__link {
+    margin-top: auto;
+    font-weight: 800;
+  }
+
+  a:focus-visible {
+    outline: 3px solid var(--focus-color);
+    outline-offset: 3px;
+  }
+</style>

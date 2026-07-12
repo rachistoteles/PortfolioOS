@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 
+import ProjectCard from "../../components/shared/ProjectCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const projects = (await getCollection("projects")).sort(
@@ -25,22 +26,17 @@ const projects = (await getCollection("projects")).sort(
       </p>
     </header>
 
-    <div>
+    <div class="project-grid">
       {
         projects.map((project) => (
-          <article>
-            <p>{project.data.status}</p>
-            <h2>{project.data.title}</h2>
-            <p>{project.data.description}</p>
-            <a href={`/projects/${project.id}`}>View project</a>
-          </article>
+          <ProjectCard project={project} />
         ))
       }
     </div>
 
     <p class="todo-note">
-      TODO(Codex): Build the complete projects explorer, project cards,
-      filtering, feature-preview media, and XP/modern visual variants.
+      TODO(Codex): Build the complete projects explorer, filtering,
+      feature-preview media, and XP-specific visual variant.
     </p>
   </main>
 </BaseLayout>
@@ -62,9 +58,9 @@ const projects = (await getCollection("projects")).sort(
     font-size: clamp(3rem, 10vw, 7rem);
   }
 
-  article {
-    margin: 1rem 0;
-    padding: 1.5rem;
-    border: 1px solid currentColor;
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: 1rem;
   }
 </style>
