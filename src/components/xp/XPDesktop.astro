@@ -1,91 +1,16 @@
 ---
-import DesktopWindow from "./DesktopWindow.vue";
-import XPTaskbar from "./XPTaskbar.vue";
+import type {
+  ArticleSummary,
+  ProjectSummary,
+} from "./desktopTypes";
+import XPDesktopShell from "./XPDesktopShell.vue";
 
 interface Props {
-  projectCount: number;
-  postCount: number;
+  projects: ProjectSummary[];
+  articles: ArticleSummary[];
 }
 
-const { projectCount, postCount } = Astro.props;
+const { projects, articles } = Astro.props;
 ---
 
-<section class="xp-desktop" aria-labelledby="xp-desktop-title">
-  <div class="xp-wallpaper">
-    <header class="xp-welcome">
-      <p class="eyebrow">PortfolioOS</p>
-
-      <h1 id="xp-desktop-title">
-        Richard's Development Desktop
-      </h1>
-
-      <p>
-        Explore applications, experiments, coding guides, and
-        development notes.
-      </p>
-    </header>
-
-    <nav class="desktop-icons" aria-label="Portfolio desktop">
-      <a class="desktop-icon" href="/projects">
-        <span class="desktop-icon__image" aria-hidden="true">🖥️</span>
-        <span>My Projects</span>
-        <small>{projectCount} projects</small>
-      </a>
-
-      <a class="desktop-icon" href="/blog">
-        <span class="desktop-icon__image" aria-hidden="true">📁</span>
-        <span>My Blog</span>
-        <small>{postCount} articles</small>
-      </a>
-
-      <a class="desktop-icon" href="#about">
-        <span class="desktop-icon__image" aria-hidden="true">📄</span>
-        <span>About Richard.txt</span>
-      </a>
-
-      <button class="desktop-icon" type="button">
-        <span class="desktop-icon__image" aria-hidden="true">⌨️</span>
-        <span>Terminal</span>
-        <small>Coming later</small>
-      </button>
-    </nav>
-
-    <DesktopWindow
-      client:load
-      windowId="welcome"
-      title="Welcome to PortfolioOS"
-    >
-      <div slot="menu">
-        <a href="/">File</a>
-        <a href="/projects">Projects</a>
-        <a href="/blog">Journal</a>
-        <a href="#about">Help</a>
-      </div>
-
-      <div slot="toolbar">
-        <a href="/projects"><span aria-hidden="true">◀</span> Projects</a>
-        <a href="/blog"><span aria-hidden="true">⌕</span> Search journal</a>
-        <a href="#about"><span aria-hidden="true">📁</span> About</a>
-      </div>
-
-      <span slot="address">C:\PortfolioOS\Welcome</span>
-
-      <p>
-        Projects are the main focus of this portfolio. Each project
-        will eventually contain feature videos, technical details,
-        architecture notes, and related development logs.
-      </p>
-
-      <p>
-        Drag the title bar with a pointer, or focus it and use
-        <kbd>Alt</kbd> plus the arrow keys to move this window.
-      </p>
-    </DesktopWindow>
-  </div>
-
-  <XPTaskbar
-    client:load
-    windowId="welcome"
-    windowTitle="Welcome to PortfolioOS"
-  />
-</section>
+<XPDesktopShell client:load projects={projects} articles={articles} />

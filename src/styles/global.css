@@ -90,7 +90,7 @@ html[data-theme="xp"] .modern-interface {
 
 .xp-wallpaper {
   position: relative;
-  min-height: calc(100vh - 2.45rem);
+  height: calc(100vh - 2.45rem);
   padding: 2rem 1.5rem 4rem;
   overflow: hidden;
 }
@@ -171,6 +171,19 @@ html[data-theme="xp"] .modern-interface {
 .desktop-icon small {
   margin-top: 0.3rem;
   opacity: 0.78;
+}
+
+.desktop-icon:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.desktop-workspace {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 @media (max-width: 40rem) {
@@ -331,10 +344,7 @@ html[data-theme="modern"] .xp-interface {
 }
 
 html[data-theme="xp"] .about-placeholder {
-  margin-bottom: 3rem;
-  padding: 2rem;
-  border: 3px solid #0054e3;
-  background: #ece9d8;
+  display: none;
 }
 
 html[data-theme="modern"] .about-placeholder {
@@ -367,6 +377,10 @@ html[data-theme="modern"] .about-placeholder {
 
   .desktop-icons {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .desktop-workspace {
+    z-index: 3;
   }
 
   .xp-taskbar time {

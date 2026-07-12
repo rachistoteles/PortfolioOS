@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
-interface Props {
-  windowId: string;
-  windowTitle: string;
-}
+import type { DesktopWindowState } from "./desktopTypes";
 
-const props = defineProps<Props>();
-const isOpen = ref(true);
-const isMinimized = ref(false);
-const isActive = ref(true);
+defineProps<{
+  windows: DesktopWindowState[];
+  focusedWindowId: string | null;
+}>();
+const emit = defineEmits<{
+  launchAbout: [];
+  launchJournal: [];
+  launchProjects: [];
+  toggleWindow: [id: string];
+}>();
+
 const isStartOpen = ref(false);
 const clock = ref("");
 let clockTimer: number | undefined;
@@ -21,29 +25,14 @@ function updateClock() {
   }).format(new Date());
 }
 
-function handleWindowState(event: Event) {
-  const detail = (
-    event as CustomEvent<{ id: string; open: boolean; minimized: boolean }>
-  ).detail;
+function launch(kind: "projects" | "journal") {
+  isStartOpen.value = false;
 
-  if (detail.id === props.windowId) {
-    isOpen.value = detail.open;
-    isMinimized.value = detail.minimized;
-    isActive.value = detail.open && !detail.minimized;
+  if (kind === "projects") {
+    emit("launchProjects");
+  } else {
+    emit("launchJournal");
   }
-}
-
-function handleWindowActive(event: Event) {
-  const detail = (event as CustomEvent<{ id: string }>).detail;
-  isActive.value = detail.id === props.windowId;
-}
-
-function toggleWindow() {
-  window.dispatchEvent(
-    new CustomEvent("portfolio:window-command", {
-      detail: { id: props.windowId, action: "toggle" },
-    }),
-  );
 }
 
 function closeStartMenu(event: KeyboardEvent) {
@@ -52,35 +41,57 @@ function closeStartMenu(event: KeyboardEvent) {
   }
 }
 
+function closeOnOutsidePointer(event: PointerEvent) {
+  const target = event.target as HTMLElement;
+
+  if (!target.closest(".start-menu") && !target.closest(".start-button")) {
+    isStartOpen.value = false;
+  }
+}
+
 onMounted(() => {
   updateClock();
   clockTimer = window.setInterval(updateClock, 30_000);
-  window.addEventListener("portfolio:window-state", handleWindowState);
-  window.addEventListener("portfolio:window-active", handleWindowActive);
+  window.addEventListener("pointerdown", closeOnOutsidePointer);
 });
 
 onBeforeUnmount(() => {
   window.clearInterval(clockTimer);
-  window.removeEventListener("portfolio:window-state", handleWindowState);
-  window.removeEventListener("portfolio:window-active", handleWindowActive);
+  window.removeEventListener("pointerdown", closeOnOutsidePointer);
 });
 </script>
 
 <template>
-  <footer
-    class="xp-taskbar"
-    aria-label="Desktop taskbar"
-    @keydown="closeStartMenu"
-  >
-    <nav v-if="isStartOpen" id="portfolio-start-menu" class="start-menu" aria-label="Start menu">
+  <footer class="xp-taskbar" aria-label="Desktop taskbar" @keydown="closeStartMenu">
+    <nav
+      v-if="isStartOpen"
+      id="portfolio-start-menu"
+      class="start-menu"
+      aria-label="Start menu"
+    >
       <header>
         <span class="start-avatar" aria-hidden="true">RV</span>
         <strong>Richard Vázquez</strong>
       </header>
       <div class="start-menu__links">
-        <a href="/projects"><span aria-hidden="true">🖥️</span><span><strong>My Projects</strong><small>Applications and experiments</small></span></a>
-        <a href="/blog"><span aria-hidden="true">📁</span><span><strong>Technical Journal</strong><small>Development logs and guides</small></span></a>
-        <a href="#about"><span aria-hidden="true">📄</span><span><strong>About Richard</strong><small>Profile and technical focus</small></span></a>
+        <button type="button" @click="launch('projects')">
+          <span aria-hidden="true">🖥️</span>
+          <span><strong>My Projects</strong><small>Applications and experiments</small></span>
+        </button>
+        <button type="button" @click="launch('journal')">
+          <span aria-hidden="true">📁</span>
+          <span><strong>Technical Journal</strong><small>Development logs and guides</small></span>
+        </button>
+        <button
+          type="button"
+          @click="
+            isStartOpen = false;
+            emit('launchAbout');
+          "
+        >
+          <span aria-hidden="true">📄</span>
+          <span><strong>About Richard</strong><small>Profile and technical focus</small></span>
+        </button>
       </div>
     </nav>
 
@@ -97,18 +108,30 @@ onBeforeUnmount(() => {
 
     <div class="taskbar-divider" aria-hidden="true"></div>
 
-    <button
-      v-if="isOpen"
-      type="button"
-      class="taskbar-app"
-      :class="{ 'taskbar-app--active': isActive && !isMinimized }"
-      :aria-pressed="isActive && !isMinimized"
-      :aria-label="isMinimized ? `Restore ${windowTitle}` : `Minimize ${windowTitle}`"
-      @click="toggleWindow"
-    >
-      <span aria-hidden="true">📁</span>
-      <span>{{ windowTitle }}</span>
-    </button>
+    <div class="taskbar-apps" aria-label="Open windows">
+      <button
+        v-for="desktopWindow in windows"
+        :key="desktopWindow.id"
+        type="button"
+        class="taskbar-app"
+        :class="{
+          'taskbar-app--active':
+            focusedWindowId === desktopWindow.id && !desktopWindow.minimized,
+        }"
+        :aria-pressed="
+          focusedWindowId === desktopWindow.id && !desktopWindow.minimized
+        "
+        :aria-label="
+          desktopWindow.minimized
+            ? `Restore ${desktopWindow.title}`
+            : `Toggle ${desktopWindow.title}`
+        "
+        @click="emit('toggleWindow', desktopWindow.id)"
+      >
+        <span aria-hidden="true">{{ desktopWindow.icon }}</span>
+        <span>{{ desktopWindow.title }}</span>
+      </button>
+    </div>
 
     <div class="taskbar-tray">
       <span class="tray-status" aria-label="PortfolioOS is online">●</span>
@@ -120,7 +143,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .xp-taskbar {
   position: fixed;
-  z-index: 50;
+  z-index: 100;
   right: 0;
   bottom: 0;
   left: 0;
@@ -137,6 +160,7 @@ onBeforeUnmount(() => {
 .start-button {
   height: 100%;
   padding: 0 1.2rem 0 0.85rem;
+  flex: 0 0 auto;
   border: 0;
   border-right: 1px solid #1b6b20;
   border-radius: 0 1rem 1rem 0;
@@ -150,13 +174,12 @@ onBeforeUnmount(() => {
   text-shadow: 1px 1px 1px rgb(0 0 0 / 45%);
   cursor: pointer;
 }
-
 .start-orbit { margin-right: 0.3rem; color: #fff8bd; }
-.taskbar-divider { width: 2px; height: 1.75rem; border-right: 1px solid rgb(255 255 255 / 35%); background: rgb(0 38 133 / 35%); }
+.taskbar-divider { width: 2px; height: 1.75rem; flex: 0 0 auto; border-right: 1px solid rgb(255 255 255 / 35%); background: rgb(0 38 133 / 35%); }
 
 .start-menu {
   position: fixed;
-  z-index: 60;
+  z-index: 110;
   bottom: 2.45rem;
   left: 0;
   width: min(25rem, calc(100vw - 1rem));
@@ -168,40 +191,26 @@ onBeforeUnmount(() => {
   color: #111;
   box-shadow: 4px -4px 18px rgb(0 0 0 / 35%);
 }
-
-.start-menu header {
-  display: flex;
-  padding: 0.65rem 0.8rem;
-  background: linear-gradient(180deg, #3f8cf3, #0a58d9);
-  color: white;
-  align-items: center;
-  gap: 0.65rem;
-  text-shadow: 1px 1px 1px rgb(0 0 0 / 40%);
-}
-
-.start-avatar {
-  display: grid;
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 2px solid white;
-  border-radius: 5px;
-  background: linear-gradient(135deg, #fff8bd, #69b157);
-  color: #17448c;
-  font-weight: 800;
-  text-shadow: none;
-  place-items: center;
-}
-
+.start-menu header { display: flex; padding: 0.65rem 0.8rem; background: linear-gradient(180deg, #3f8cf3, #0a58d9); color: white; align-items: center; gap: 0.65rem; text-shadow: 1px 1px 1px rgb(0 0 0 / 40%); }
+.start-avatar { display: grid; width: 2.5rem; height: 2.5rem; border: 2px solid white; border-radius: 5px; background: linear-gradient(135deg, #fff8bd, #69b157); color: #17448c; font-weight: 800; text-shadow: none; place-items: center; }
 .start-menu__links { display: grid; padding: 0.45rem; }
+.start-menu__links button,
 .start-menu__links a {
   display: grid;
+  width: 100%;
   padding: 0.55rem;
+  border: 0;
+  background: transparent;
   color: #111;
   grid-template-columns: 2rem 1fr;
   align-items: center;
   gap: 0.45rem;
+  text-align: left;
   text-decoration: none;
+  cursor: pointer;
 }
+.start-menu__links button:hover,
+.start-menu__links button:focus-visible,
 .start-menu__links a:hover,
 .start-menu__links a:focus-visible { background: #316ac5; color: white; outline: 0; }
 .start-menu__links span:first-child { font-size: 1.45rem; }
@@ -209,12 +218,15 @@ onBeforeUnmount(() => {
 .start-menu__links small { display: block; }
 .start-menu__links small { margin-top: 0.12rem; opacity: 0.75; }
 
+.taskbar-apps { display: flex; min-width: 0; overflow-x: auto; flex: 1; gap: 0.25rem; scrollbar-width: thin; }
 .taskbar-app {
   display: flex;
-  width: min(14rem, 38vw);
+  width: min(12rem, 24vw);
+  min-width: 7rem;
   height: 1.9rem;
   padding: 0 0.65rem;
   overflow: hidden;
+  flex: 0 1 12rem;
   border: 1px solid rgb(0 45 145 / 60%);
   border-radius: 0.15rem;
   background: linear-gradient(180deg, #4c97ee, #2571d4);
@@ -223,27 +235,20 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 0.4rem;
   text-align: left;
-  text-overflow: ellipsis;
   white-space: nowrap;
   cursor: pointer;
 }
-
+.taskbar-app span:last-child { overflow: hidden; text-overflow: ellipsis; }
 .taskbar-app--active { background: linear-gradient(180deg, #1450a7, #1f62bd); box-shadow: inset 1px 2px 3px rgb(0 0 0 / 28%); }
 .start-button:focus-visible,
 .taskbar-app:focus-visible { outline: 3px solid var(--focus-color); outline-offset: -3px; }
 
-.taskbar-tray {
-  display: flex;
-  height: 100%;
-  margin-left: auto;
-  padding: 0 0.8rem;
-  border-left: 1px solid #0b75c5;
-  background: linear-gradient(180deg, #25a7ed, #0b87d8);
-  align-items: center;
-  gap: 0.55rem;
-  font-size: 0.78rem;
-  box-shadow: inset 1px 0 0 rgb(255 255 255 / 28%);
-}
-
+.taskbar-tray { display: flex; height: 100%; margin-left: auto; padding: 0 0.8rem; flex: 0 0 auto; border-left: 1px solid #0b75c5; background: linear-gradient(180deg, #25a7ed, #0b87d8); align-items: center; gap: 0.55rem; font-size: 0.78rem; box-shadow: inset 1px 0 0 rgb(255 255 255 / 28%); }
 .tray-status { color: #b9ff93; text-shadow: 0 0 3px #276b12; }
+
+@media (max-width: 720px) {
+  .start-button { padding-inline: 0.7rem; }
+  .taskbar-app { width: 8rem; min-width: 6rem; }
+  .taskbar-tray { padding-inline: 0.55rem; }
+}
 </style>

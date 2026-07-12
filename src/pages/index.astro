@@ -4,6 +4,10 @@ import { getCollection } from "astro:content";
 import ModernPortfolio from "../components/modern/ModernPortfolio.astro";
 import ThemeSwitcher from "../components/shared/ThemeSwitcher.vue";
 import XPDesktop from "../components/xp/XPDesktop.astro";
+import type {
+  ArticleSummary,
+  ProjectSummary,
+} from "../components/xp/desktopTypes";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const projects = (await getCollection("projects")).sort(
@@ -17,6 +21,45 @@ const publishedPosts = (await getCollection("blog")).filter(
 const featuredProjects = projects.filter(
   (project) => project.data.featured,
 );
+
+const projectSummaries = projects.map(
+  ({ id, data }) =>
+    ({
+      id,
+      title: data.title,
+      description: data.description,
+      status: data.status,
+      featured: data.featured,
+      order: data.order,
+      coverImage: data.coverImage,
+      repositoryUrl: data.repositoryUrl,
+      liveUrl: data.liveUrl,
+      technologies: data.technologies,
+      features: data.features,
+      relatedPosts: data.relatedPosts,
+    }) satisfies ProjectSummary,
+);
+
+const articleSummaries = publishedPosts
+  .sort(
+    (first, second) =>
+      second.data.publishedAt.getTime() - first.data.publishedAt.getTime(),
+  )
+  .map(
+    ({ id, data }) =>
+      ({
+        id,
+        title: data.title,
+        description: data.description,
+        publishedAt: data.publishedAt.toISOString(),
+        updatedAt: data.updatedAt?.toISOString(),
+        featured: data.featured,
+        category: data.category,
+        tags: data.tags,
+        relatedProject: data.relatedProject,
+        coverImage: data.coverImage,
+      }) satisfies ArticleSummary,
+  );
 ---
 
 <BaseLayout
@@ -30,8 +73,8 @@ const featuredProjects = projects.filter(
   <main>
     <div class="xp-interface">
       <XPDesktop
-        projectCount={projects.length}
-        postCount={publishedPosts.length}
+        projects={projectSummaries}
+        articles={articleSummaries}
       />
     </div>
 
