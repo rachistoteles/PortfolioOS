@@ -151,6 +151,17 @@ export function useDesktopWindows(initialWindows: WindowSeed[] = []) {
     }
   }
 
+  function recenterWindow(
+    id: string,
+    workspace: { width: number; height: number },
+  ) {
+    const target = findWindow(id);
+
+    if (target) {
+      target.position = centeredPosition(target, workspace);
+    }
+  }
+
   function applyRoute(
     target: DesktopWindowState,
     route: DesktopWindowRoute,
@@ -228,6 +239,7 @@ export function useDesktopWindows(initialWindows: WindowSeed[] = []) {
     moveWindow,
     navigateWindow,
     openWindow,
+    recenterWindow,
     resizeWindow,
     goThroughHistory,
     toggleFromTaskbar,

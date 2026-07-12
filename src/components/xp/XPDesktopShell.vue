@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import AboutWindow from "./AboutWindow.vue";
 import ArticlePreview from "./ArticlePreview.vue";
@@ -31,19 +31,20 @@ const {
   moveWindow,
   navigateWindow,
   openWindow,
+  recenterWindow,
   resizeWindow,
   goThroughHistory,
   toggleFromTaskbar,
   toggleMaximize,
 } = useDesktopWindows([
   {
-    id: "welcome",
-    kind: "welcome",
-    title: "Welcome to PortfolioOS",
-    icon: "📁",
-    position: { x: 330, y: 170 },
-    width: 680,
-    height: 390,
+    id: "about",
+    kind: "about",
+    title: "About Richard.txt",
+    icon: "📄",
+    position: { x: 40, y: 20 },
+    width: 1120,
+    height: 760,
   },
 ]);
 
@@ -171,6 +172,10 @@ function moveThroughHistory(windowId: string, direction: -1 | 1) {
   goThroughHistory(windowId, direction, workspaceSize());
 }
 
+onMounted(() => {
+  recenterWindow("about", workspaceSize());
+});
+
 function addressFor(desktopWindow: DesktopWindowState) {
   switch (desktopWindow.kind) {
     case "projects":
@@ -194,15 +199,6 @@ function addressFor(desktopWindow: DesktopWindowState) {
 <template>
   <section class="xp-desktop" aria-label="PortfolioOS desktop">
     <div class="xp-wallpaper">
-      <header class="xp-welcome">
-        <p class="eyebrow">PortfolioOS</p>
-        <h1>Richard's Development Desktop</h1>
-        <p>
-          Explore applications, experiments, coding guides, and development
-          notes.
-        </p>
-      </header>
-
       <nav class="desktop-icons" aria-label="Portfolio desktop">
         <button class="desktop-icon" type="button" @click="launchProjects">
           <span class="desktop-icon__image" aria-hidden="true">🖥️</span>

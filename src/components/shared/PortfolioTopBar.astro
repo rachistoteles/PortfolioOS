@@ -1,0 +1,28 @@
+---
+import ThemeSwitcher from "./ThemeSwitcher.vue";
+---
+
+<header class="master-topbar">
+  <a class="master-topbar__brand" href="/" aria-label="PortfolioOS home">
+    <span class="master-topbar__mark" aria-hidden="true">◈</span>
+    <span>
+      <strong>PortfolioOS</strong>
+      <small>Application</small>
+    </span>
+  </a>
+
+  <div class="master-topbar__identity">
+    <p>Richard's Development Desktop</p>
+    <span>
+      Explore applications, experiments, coding guides, and development notes.
+    </span>
+  </div>
+
+  <div class="master-topbar__actions">
+    <span class="master-topbar__os">
+      <small>Current OS</small>
+      <strong>PortfolioOS</strong>
+    </span>
+    <ThemeSwitcher client:load />
+  </div>
+</header>

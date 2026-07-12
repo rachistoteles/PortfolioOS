@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 
 import ModernPortfolio from "../components/modern/ModernPortfolio.astro";
-import ThemeSwitcher from "../components/shared/ThemeSwitcher.vue";
+import PortfolioTopBar from "../components/shared/PortfolioTopBar.astro";
 import XPDesktop from "../components/xp/XPDesktop.astro";
 import type {
   ArticleSummary,
@@ -66,11 +66,9 @@ const articleSummaries = publishedPosts
   title="PortfolioOS | Richard's Developer Portfolio"
   description="A dual-interface developer portfolio containing projects, demonstrations, coding guides, and development logs."
 >
-  <div class="global-theme-control">
-    <ThemeSwitcher client:load />
-  </div>
-
-  <main>
+  <div class="portfolio-app">
+    <PortfolioTopBar />
+    <main class="portfolio-main">
     <div class="xp-interface">
       <XPDesktop
         projects={projectSummaries}
@@ -101,5 +99,6 @@ const articleSummaries = publishedPosts
         and current technical focus.
       </p>
     </section>
-  </main>
+    </main>
+  </div>
 </BaseLayout>
