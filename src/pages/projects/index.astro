@@ -1,0 +1,70 @@
+---
+import { getCollection } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const projects = (await getCollection("projects")).sort(
+  (first, second) => first.data.order - second.data.order,
+);
+---
+
+<BaseLayout
+  title="Projects | PortfolioOS"
+  description="Applications, experiments, and technical projects developed by Richard."
+>
+  <main class="content-page">
+    <a href="/">← Return to PortfolioOS</a>
+
+    <header>
+      <p>PortfolioOS / Projects</p>
+      <h1>Projects</h1>
+      <p>
+        Applications presented through feature demonstrations,
+        technical explanations, architecture notes, and development
+        articles.
+      </p>
+    </header>
+
+    <div>
+      {
+        projects.map((project) => (
+          <article>
+            <p>{project.data.status}</p>
+            <h2>{project.data.title}</h2>
+            <p>{project.data.description}</p>
+            <a href={`/projects/${project.id}`}>View project</a>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="todo-note">
+      TODO(Codex): Build the complete projects explorer, project cards,
+      filtering, feature-preview media, and XP/modern visual variants.
+    </p>
+  </main>
+</BaseLayout>
+
+<style>
+  .content-page {
+    width: min(100% - 2rem, 68rem);
+    margin: 0 auto;
+    padding: 5rem 0;
+  }
+
+  header {
+    max-width: 48rem;
+    margin: 4rem 0;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(3rem, 10vw, 7rem);
+  }
+
+  article {
+    margin: 1rem 0;
+    padding: 1.5rem;
+    border: 1px solid currentColor;
+  }
+</style>

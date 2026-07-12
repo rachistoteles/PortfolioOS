@@ -1,0 +1,488 @@
+:root {
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+
+  color-scheme: light;
+
+  --focus-color: #ffb000;
+  --theme-switch-background: #ffffff;
+  --theme-switch-foreground: #10245a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.global-theme-control {
+  position: fixed;
+  z-index: 1000;
+  top: 1rem;
+  right: 1rem;
+}
+
+.todo-note {
+  padding: 0.8rem;
+  border: 1px dashed currentColor;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.82rem;
+}
+
+/* XP MODE */
+
+html[data-theme="xp"] {
+  --theme-switch-background: #ece9d8;
+  --theme-switch-foreground: #003399;
+}
+
+html[data-theme="xp"] body {
+  background: #3a6ea5;
+  color: #111111;
+  font-family: Tahoma, Verdana, sans-serif;
+}
+
+html[data-theme="xp"] .modern-interface {
+  display: none;
+}
+
+.xp-desktop {
+  min-height: 100vh;
+  padding-bottom: 2.8rem;
+  background:
+    radial-gradient(
+      circle at 72% 30%,
+      rgb(255 255 255 / 28%),
+      transparent 28%
+    ),
+    linear-gradient(160deg, #49a1de 0%, #2566ae 48%, #17448c 100%);
+}
+
+.xp-wallpaper {
+  position: relative;
+  min-height: calc(100vh - 2.8rem);
+  padding: 4.8rem 1.5rem 5rem;
+  overflow: hidden;
+}
+
+.xp-wallpaper::after {
+  position: absolute;
+  right: -10%;
+  bottom: -18%;
+  width: 75%;
+  height: 52%;
+  border-radius: 50% 50% 0 0;
+  background: linear-gradient(160deg, #72c84a, #2b8d3c);
+  content: "";
+  transform: rotate(-6deg);
+}
+
+.xp-welcome,
+.desktop-icons,
+.xp-window {
+  position: relative;
+  z-index: 1;
+}
+
+.xp-welcome {
+  max-width: 46rem;
+  color: white;
+  text-shadow: 1px 2px 1px rgb(0 0 0 / 35%);
+}
+
+.xp-welcome h1 {
+  max-width: 12ch;
+  margin: 0;
+  font-size: clamp(2.2rem, 7vw, 5.7rem);
+  line-height: 0.95;
+}
+
+.xp-welcome > p:last-child {
+  max-width: 38rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.desktop-icons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 9rem));
+  gap: 1rem;
+  max-width: 38rem;
+  margin-top: 2rem;
+}
+
+.desktop-icon {
+  display: flex;
+  min-height: 8rem;
+  padding: 0.75rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: white;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: 1px 1px 2px #000000;
+  cursor: pointer;
+}
+
+.desktop-icon:hover,
+.desktop-icon:focus-visible {
+  border-color: rgb(255 255 255 / 80%);
+  background: rgb(24 83 177 / 62%);
+}
+
+.desktop-icon__image {
+  margin-bottom: 0.35rem;
+  font-size: 2.8rem;
+  text-shadow: none;
+}
+
+.desktop-icon small {
+  margin-top: 0.3rem;
+  opacity: 0.78;
+}
+
+.xp-window {
+  width: min(100%, 42rem);
+  margin-top: 2rem;
+  border: 3px solid #0054e3;
+  border-radius: 0.5rem 0.5rem 0.15rem 0.15rem;
+  background: #ece9d8;
+  box-shadow: 5px 8px 25px rgb(0 0 0 / 28%);
+}
+
+.xp-window__titlebar {
+  display: flex;
+  min-height: 2.2rem;
+  padding: 0.25rem 0.35rem 0.25rem 0.55rem;
+  background: linear-gradient(
+    to bottom,
+    #3c8df5,
+    #0054e3 52%,
+    #003db8
+  );
+  color: white;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.xp-window__titlebar h2 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.xp-window__controls {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.xp-window__controls span {
+  display: grid;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 1px solid white;
+  border-radius: 0.18rem;
+  background: #1f69d6;
+  place-items: center;
+}
+
+.xp-window__controls span:last-child {
+  background: #d83b1f;
+}
+
+.xp-window__content {
+  padding: 1.2rem;
+  line-height: 1.6;
+}
+
+.xp-taskbar {
+  position: fixed;
+  z-index: 50;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  height: 2.8rem;
+  background: linear-gradient(
+    to bottom,
+    #2b7bea,
+    #0d55c7 52%,
+    #16449b
+  );
+  color: white;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.start-button {
+  height: 100%;
+  padding: 0 1.3rem;
+  border: 0;
+  border-radius: 0 1rem 1rem 0;
+  background: linear-gradient(to bottom, #67c850, #288a28);
+  color: white;
+  font-style: italic;
+  font-weight: 800;
+}
+
+.taskbar-app {
+  min-width: 10rem;
+  padding: 0.42rem 0.8rem;
+  border: 1px solid rgb(255 255 255 / 28%);
+  background: rgb(17 74 174 / 70%);
+}
+
+.xp-taskbar time {
+  height: 100%;
+  margin-left: auto;
+  padding: 0 1rem;
+  background: #1290e8;
+  display: grid;
+  place-items: center;
+}
+
+/* MODERN MODE */
+
+html[data-theme="modern"] {
+  color-scheme: dark;
+
+  --focus-color: #82f7d5;
+  --theme-switch-background: rgb(14 22 35 / 84%);
+  --theme-switch-foreground: #ecfff9;
+}
+
+html[data-theme="modern"] body {
+  background:
+    radial-gradient(circle at top left, #183a50, transparent 34rem),
+    #081018;
+  color: #eaf4f1;
+}
+
+html[data-theme="modern"] .xp-interface {
+  display: none;
+}
+
+.modern-portfolio {
+  width: min(100% - 2rem, 76rem);
+  margin: 0 auto;
+  padding: 8rem 0 6rem;
+}
+
+.modern-hero {
+  max-width: 60rem;
+  padding: 4rem 0 7rem;
+}
+
+.modern-hero h1 {
+  max-width: 12ch;
+  margin: 0;
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  line-height: 0.88;
+  letter-spacing: -0.065em;
+}
+
+.modern-hero > p:not(.eyebrow) {
+  max-width: 48rem;
+  margin-top: 2rem;
+  color: #b6c8c3;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  line-height: 1.7;
+}
+
+.modern-statistics {
+  display: flex;
+  margin-top: 2rem;
+  color: #82f7d5;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.section-heading {
+  margin-bottom: 2rem;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4.5rem);
+}
+
+.modern-project-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.modern-project-card {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 5%);
+  grid-template-columns: minmax(16rem, 0.9fr) 1.1fr;
+}
+
+.project-media-placeholder {
+  display: flex;
+  min-height: 21rem;
+  padding: 2rem;
+  background:
+    linear-gradient(135deg, rgb(130 247 213 / 24%), transparent),
+    #142434;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.project-media-placeholder small {
+  max-width: 22rem;
+  margin-top: 0.8rem;
+  color: #b5c7c3;
+}
+
+.modern-project-card__content {
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.project-status {
+  color: #82f7d5;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.modern-project-card h3 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.8rem);
+}
+
+.modern-project-card__content > p:not(.project-status) {
+  color: #b6c8c3;
+  line-height: 1.7;
+}
+
+.technology-list {
+  display: flex;
+  padding: 0;
+  list-style: none;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.technology-list li {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid rgb(130 247 213 / 30%);
+  border-radius: 999px;
+  color: #c9fff0;
+  font-size: 0.8rem;
+}
+
+.modern-project-card a {
+  display: inline-block;
+  margin-top: 1.3rem;
+  color: #82f7d5;
+  font-weight: 800;
+}
+
+/* SHARED PLACEHOLDER */
+
+.about-placeholder {
+  width: min(100% - 2rem, 60rem);
+  margin: 0 auto;
+  padding: 5rem 0;
+}
+
+html[data-theme="xp"] .about-placeholder {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  border: 3px solid #0054e3;
+  background: #ece9d8;
+}
+
+html[data-theme="modern"] .about-placeholder {
+  border-top: 1px solid rgb(255 255 255 / 14%);
+}
+
+.about-placeholder h2 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 4.5rem);
+}
+
+.about-placeholder > p:not(.eyebrow, .todo-note) {
+  max-width: 45rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 720px) {
+  .global-theme-control {
+    top: 0.7rem;
+    right: 0.7rem;
+  }
+
+  .xp-wallpaper {
+    padding-inline: 1rem;
+  }
+
+  .xp-welcome h1 {
+    font-size: clamp(2.4rem, 14vw, 4.2rem);
+  }
+
+  .desktop-icons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .xp-taskbar time {
+    display: none;
+  }
+
+  .modern-project-card {
+    grid-template-columns: 1fr;
+  }
+
+  .project-media-placeholder {
+    min-height: 14rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

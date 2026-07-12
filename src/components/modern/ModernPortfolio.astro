@@ -1,0 +1,68 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  projects: CollectionEntry<"projects">[];
+  postCount: number;
+}
+
+const { projects, postCount } = Astro.props;
+---
+
+<section class="modern-portfolio" aria-labelledby="modern-title">
+  <header class="modern-hero">
+    <p class="eyebrow">Developer · Builder · Experimenter</p>
+
+    <h1 id="modern-title">
+      Applications with visible depth.
+    </h1>
+
+    <p>
+      A portfolio centered on working projects, feature
+      demonstrations, technical decisions, and development logs.
+    </p>
+
+    <div class="modern-statistics">
+      <span>{projects.length} documented projects</span>
+      <span>{postCount} technical articles</span>
+    </div>
+  </header>
+
+  <section aria-labelledby="featured-projects-title">
+    <header class="section-heading">
+      <p class="eyebrow">Selected work</p>
+      <h2 id="featured-projects-title">Featured projects</h2>
+    </header>
+
+    <div class="modern-project-grid">
+      {
+        projects.map((project) => (
+          <article class="modern-project-card">
+            <div class="project-media-placeholder">
+              <span>Project media</span>
+              <small>
+                TODO(Codex): Add optimized video preview component.
+              </small>
+            </div>
+
+            <div class="modern-project-card__content">
+              <p class="project-status">{project.data.status}</p>
+              <h3>{project.data.title}</h3>
+              <p>{project.data.description}</p>
+
+              <ul class="technology-list" aria-label="Technologies">
+                {project.data.technologies.map((technology) => (
+                  <li>{technology}</li>
+                ))}
+              </ul>
+
+              <a href={`/projects/${project.id}`}>
+                Explore project
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</section>

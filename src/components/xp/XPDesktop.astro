@@ -1,0 +1,88 @@
+---
+interface Props {
+  projectCount: number;
+  postCount: number;
+}
+
+const { projectCount, postCount } = Astro.props;
+---
+
+<section class="xp-desktop" aria-labelledby="xp-desktop-title">
+  <div class="xp-wallpaper">
+    <header class="xp-welcome">
+      <p class="eyebrow">PortfolioOS</p>
+
+      <h1 id="xp-desktop-title">
+        Richard's Development Desktop
+      </h1>
+
+      <p>
+        Explore applications, experiments, coding guides, and
+        development notes.
+      </p>
+    </header>
+
+    <nav class="desktop-icons" aria-label="Portfolio desktop">
+      <a class="desktop-icon" href="/projects">
+        <span class="desktop-icon__image" aria-hidden="true">🖥️</span>
+        <span>My Projects</span>
+        <small>{projectCount} projects</small>
+      </a>
+
+      <a class="desktop-icon" href="/blog">
+        <span class="desktop-icon__image" aria-hidden="true">📁</span>
+        <span>My Blog</span>
+        <small>{postCount} articles</small>
+      </a>
+
+      <a class="desktop-icon" href="#about">
+        <span class="desktop-icon__image" aria-hidden="true">📄</span>
+        <span>About Richard.txt</span>
+      </a>
+
+      <button class="desktop-icon" type="button">
+        <span class="desktop-icon__image" aria-hidden="true">⌨️</span>
+        <span>Terminal</span>
+        <small>Coming later</small>
+      </button>
+    </nav>
+
+    <section class="xp-window" aria-labelledby="welcome-window-title">
+      <header class="xp-window__titlebar">
+        <h2 id="welcome-window-title">Welcome to PortfolioOS</h2>
+
+        <div class="xp-window__controls" aria-hidden="true">
+          <span>_</span>
+          <span>□</span>
+          <span>×</span>
+        </div>
+      </header>
+
+      <div class="xp-window__content">
+        <p>
+          Projects are the main focus of this portfolio. Each project
+          will eventually contain feature videos, technical details,
+          architecture notes, and related development logs.
+        </p>
+
+        <p class="todo-note">
+          TODO(Codex): Replace this static window with a reusable,
+          draggable and keyboard-accessible desktop-window system.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <footer class="xp-taskbar">
+    <button type="button" class="start-button">
+      <span aria-hidden="true">◈</span>
+      Start
+    </button>
+
+    <div class="taskbar-app">
+      PortfolioOS
+    </div>
+
+    <time datetime="2026-07-12">Portfolio active</time>
+  </footer>
+</section>

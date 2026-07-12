@@ -1,0 +1,281 @@
+---
+import { getCollection, render } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: { project },
+  }));
+}
+
+type Project = Awaited<ReturnType<typeof getCollection<"projects">>>[number];
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const relatedPostIds = new Set(project.data.relatedPosts);
+const relatedPosts = (await getCollection("blog"))
+  .filter((post) => !post.data.draft && relatedPostIds.has(post.id))
+  .sort(
+    (first, second) =>
+      second.data.publishedAt.valueOf() - first.data.publishedAt.valueOf(),
+  );
+
+const statusLabels = {
+  planning: "Planning",
+  "in-development": "In development",
+  completed: "Completed",
+  archived: "Archived",
+} as const;
+---
+
+<BaseLayout
+  title={`${project.data.title} | PortfolioOS`}
+  description={project.data.description}
+>
+  <main class="project-page">
+    <nav aria-label="Breadcrumb">
+      <ol class="breadcrumbs">
+        <li><a href="/">PortfolioOS</a></li>
+        <li><a href="/projects">Projects</a></li>
+        <li aria-current="page">{project.data.title}</li>
+      </ol>
+    </nav>
+
+    <article>
+      <header class="project-header">
+        <p class="eyebrow">{statusLabels[project.data.status]}</p>
+        <h1>{project.data.title}</h1>
+        <p class="project-summary">{project.data.description}</p>
+
+        {
+          project.data.technologies.length > 0 && (
+            <ul class="technology-list" aria-label="Technologies">
+              {project.data.technologies.map((technology) => (
+                <li>{technology}</li>
+              ))}
+            </ul>
+          )
+        }
+
+        {
+          (project.data.repositoryUrl || project.data.liveUrl) && (
+            <div class="project-links" aria-label="Project links">
+              {project.data.liveUrl && (
+                <a href={project.data.liveUrl}>Visit live project</a>
+              )}
+              {project.data.repositoryUrl && (
+                <a href={project.data.repositoryUrl}>View source repository</a>
+              )}
+            </div>
+          )
+        }
+      </header>
+
+      {
+        project.data.coverImage && (
+          <img
+            class="project-cover"
+            src={project.data.coverImage}
+            alt={`Preview of ${project.data.title}`}
+          />
+        )
+      }
+
+      <div class="project-content">
+        <Content />
+      </div>
+
+      {
+        project.data.features.length > 0 && (
+          <section class="project-section" aria-labelledby="features-heading">
+            <p class="eyebrow">Capabilities</p>
+            <h2 id="features-heading">Project features</h2>
+            <div class="feature-grid">
+              {project.data.features.map((feature) => (
+                <article class="feature-card">
+                  <h3>{feature.title}</h3>
+                  <p>{feature.description}</p>
+                  {feature.media && (
+                    <img
+                      src={feature.media}
+                      alt={`${feature.title} in ${project.data.title}`}
+                      loading="lazy"
+                    />
+                  )}
+                </article>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      {
+        relatedPosts.length > 0 && (
+          <section class="project-section" aria-labelledby="related-heading">
+            <p class="eyebrow">Technical journal</p>
+            <h2 id="related-heading">Related articles</h2>
+            <ul class="related-posts">
+              {relatedPosts.map((post) => (
+                <li>
+                  <a href={`/blog/${post.id}`}>{post.data.title}</a>
+                  <p>{post.data.description}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+  .project-page {
+    width: min(100% - 2rem, 68rem);
+    margin: 0 auto;
+    padding: 5rem 0;
+  }
+
+  .breadcrumbs {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .breadcrumbs li:not(:last-child)::after {
+    margin-left: 0.5rem;
+    content: "/";
+    opacity: 0.55;
+  }
+
+  .project-header {
+    max-width: 52rem;
+    margin: 4rem 0;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(3rem, 10vw, 7rem);
+    line-height: 0.95;
+  }
+
+  .project-summary {
+    max-width: 48rem;
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    line-height: 1.65;
+  }
+
+  .technology-list,
+  .project-links {
+    display: flex;
+    padding: 0;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .technology-list {
+    list-style: none;
+  }
+
+  .technology-list li,
+  .project-links a {
+    padding: 0.45rem 0.7rem;
+    border: 1px solid currentColor;
+  }
+
+  .project-links a {
+    font-weight: 700;
+  }
+
+  .project-cover {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 3rem;
+    border: 1px solid currentColor;
+  }
+
+  .project-content {
+    max-width: 48rem;
+    font-size: 1.05rem;
+    line-height: 1.75;
+  }
+
+  .project-section {
+    margin-top: 5rem;
+  }
+
+  .project-section h2 {
+    margin-top: 0;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: 1rem;
+  }
+
+  .feature-card,
+  .related-posts li {
+    padding: 1.25rem;
+    border: 1px solid currentColor;
+  }
+
+  .feature-card h3,
+  .feature-card p,
+  .related-posts p {
+    margin-top: 0;
+  }
+
+  .feature-card img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 1rem;
+  }
+
+  .related-posts {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    gap: 1rem;
+  }
+
+  .related-posts a {
+    font-size: 1.2rem;
+    font-weight: 800;
+  }
+
+  .related-posts p {
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+
+  a:focus-visible {
+    outline: 3px solid var(--focus-color);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 36rem) {
+    .project-page {
+      padding-top: 4.5rem;
+    }
+
+    .project-header {
+      margin: 3rem 0;
+    }
+  }
+</style>

@@ -1,17 +1,62 @@
 ---
+import { getCollection } from "astro:content";
 
+import ModernPortfolio from "../components/modern/ModernPortfolio.astro";
+import ThemeSwitcher from "../components/shared/ThemeSwitcher.vue";
+import XPDesktop from "../components/xp/XPDesktop.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const projects = (await getCollection("projects")).sort(
+  (first, second) => first.data.order - second.data.order,
+);
+
+const publishedPosts = (await getCollection("blog")).filter(
+  (post) => !post.data.draft,
+);
+
+const featuredProjects = projects.filter(
+  (project) => project.data.featured,
+);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="PortfolioOS | Richard's Developer Portfolio"
+  description="A dual-interface developer portfolio containing projects, demonstrations, coding guides, and development logs."
+>
+  <div class="global-theme-control">
+    <ThemeSwitcher client:load />
+  </div>
+
+  <main>
+    <div class="xp-interface">
+      <XPDesktop
+        projectCount={projects.length}
+        postCount={publishedPosts.length}
+      />
+    </div>
+
+    <div class="modern-interface">
+      <ModernPortfolio
+        projects={featuredProjects}
+        postCount={publishedPosts.length}
+      />
+    </div>
+
+    <section id="about" class="about-placeholder">
+      <p class="eyebrow">About</p>
+      <h2>Richard Vázquez Burgos</h2>
+
+      <p>
+        Computer engineer and application developer building
+        full-stack tools, creative software, and experimental
+        mathematical systems.
+      </p>
+
+      <p class="todo-note">
+        TODO(Codex): Replace this placeholder with the complete
+        biography, experience, skills, résumé link, contact methods,
+        and current technical focus.
+      </p>
+    </section>
+  </main>
+</BaseLayout>

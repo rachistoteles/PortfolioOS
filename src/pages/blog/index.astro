@@ -1,0 +1,78 @@
+---
+import { getCollection } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const posts = (await getCollection("blog"))
+  .filter((post) => !post.data.draft)
+  .sort(
+    (first, second) =>
+      second.data.publishedAt.valueOf() -
+      first.data.publishedAt.valueOf(),
+  );
+---
+
+<BaseLayout
+  title="Technical Journal | PortfolioOS"
+  description="Coding guides, development logs, useful tools, experiments, and technical notes."
+>
+  <main class="content-page">
+    <a href="/">← Return to PortfolioOS</a>
+
+    <header>
+      <p>PortfolioOS / Technical Journal</p>
+      <h1>Blog</h1>
+      <p>
+        Development logs, coding guides, Linux tools, debugging notes,
+        architecture decisions, and experiments.
+      </p>
+    </header>
+
+    <div>
+      {
+        posts.map((post) => (
+          <article>
+            <p>
+              {post.data.category}
+              {" · "}
+              {post.data.publishedAt.toLocaleDateString("en-US")}
+            </p>
+
+            <h2>{post.data.title}</h2>
+            <p>{post.data.description}</p>
+            <a href={`/blog/${post.id}`}>Read article</a>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="todo-note">
+      TODO(Codex): Add article pages, category filters, tags, search,
+      reading time, related projects, syntax highlighting, and RSS.
+    </p>
+  </main>
+</BaseLayout>
+
+<style>
+  .content-page {
+    width: min(100% - 2rem, 68rem);
+    margin: 0 auto;
+    padding: 5rem 0;
+  }
+
+  header {
+    max-width: 48rem;
+    margin: 4rem 0;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(3rem, 10vw, 7rem);
+  }
+
+  article {
+    margin: 1rem 0;
+    padding: 1.5rem;
+    border: 1px solid currentColor;
+  }
+</style>
