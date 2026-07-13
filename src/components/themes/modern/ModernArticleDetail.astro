@@ -1,0 +1,55 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  publishedLabel: string;
+  updatedLabel?: string;
+  relatedProject?: CollectionEntry<"projects">;
+}
+
+const { post, publishedLabel, updatedLabel, relatedProject } = Astro.props;
+---
+
+<main class="modern-detail" aria-labelledby="modern-article-title">
+  <nav class="modern-detail__nav" aria-label="Workstation">
+    <a href="/">Home</a>
+    <a href="/blog">Journal</a>
+    <span aria-current="page">{post.data.title}</span>
+  </nav>
+  <article class="modern-detail__panel">
+    <p class="eyebrow">{post.data.category}</p>
+    <h1 id="modern-article-title">{post.data.title}</h1>
+    <p class="modern-detail__summary">{post.data.description}</p>
+    <p class="modern-detail__meta">
+      <time datetime={post.data.publishedAt.toISOString()}>{publishedLabel}</time>
+      {
+        updatedLabel && (
+          <span> · Updated {updatedLabel}</span>
+        )
+      }
+    </p>
+    {
+      post.data.tags.length > 0 && (
+        <ul class="modern-detail__tags" aria-label="Tags">
+          {post.data.tags.map((tag) => <li>{tag}</li>)}
+        </ul>
+      )
+    }
+    <div class="modern-detail__body">
+      <slot />
+    </div>
+    {
+      relatedProject && (
+        <aside class="modern-detail__related">
+          <h2>Related project</h2>
+          <p>
+            <a href={`/projects/${relatedProject.id}`}>
+              {relatedProject.data.title}
+            </a>
+          </p>
+        </aside>
+      )
+    }
+  </article>
+</main>

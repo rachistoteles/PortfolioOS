@@ -1,0 +1,56 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface RelatedPost {
+  id: string;
+  title: string;
+  description: string;
+}
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  relatedPosts: RelatedPost[];
+  statusLabel: string;
+}
+
+const { project, relatedPosts, statusLabel } = Astro.props;
+---
+
+<main class="modern-detail" aria-labelledby="modern-project-title">
+  <nav class="modern-detail__nav" aria-label="Workstation">
+    <a href="/">Home</a>
+    <a href="/projects">Projects</a>
+    <span aria-current="page">{project.data.title}</span>
+  </nav>
+  <article class="modern-detail__panel">
+    <p class="eyebrow">{statusLabel}</p>
+    <h1 id="modern-project-title">{project.data.title}</h1>
+    <p class="modern-detail__summary">{project.data.description}</p>
+    {
+      project.data.technologies.length > 0 && (
+        <ul class="modern-detail__tags" aria-label="Technologies">
+          {project.data.technologies.map((technology) => (
+            <li>{technology}</li>
+          ))}
+        </ul>
+      )
+    }
+    <div class="modern-detail__body">
+      <slot />
+    </div>
+    {
+      relatedPosts.length > 0 && (
+        <section class="modern-detail__related">
+          <h2>Related journal notes</h2>
+          <ul>
+            {relatedPosts.map((post) => (
+              <li>
+                <a href={`/blog/${post.id}`}>{post.title}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </article>
+</main>

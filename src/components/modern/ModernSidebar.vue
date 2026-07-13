@@ -4,10 +4,10 @@ import { ref } from "vue";
 const isCollapsed = ref(false);
 
 const links = [
-  { href: "#modern-overview", label: "Overview", icon: "⌂" },
+  { href: "#modern-overview", label: "Home", icon: "⌂" },
   { href: "#modern-projects", label: "Projects", icon: "◇" },
   { href: "#modern-recent", label: "Journal", icon: "≡" },
-  { href: "#modern-about", label: "About", icon: "○" },
+  { href: "#modern-about", label: "Profile", icon: "○" },
 ];
 </script>
 
@@ -15,13 +15,13 @@ const links = [
   <aside
     class="modern-sidebar"
     :class="{ 'modern-sidebar--collapsed': isCollapsed }"
-    aria-label="Modern portfolio navigation"
+    aria-label="Workstation navigation"
   >
     <div class="modern-sidebar__heading">
       <span class="modern-sidebar__logo" aria-hidden="true">RV</span>
       <span v-if="!isCollapsed" class="modern-sidebar__name">
         <strong>Richard Vázquez</strong>
-        <small>Portfolio navigation</small>
+        <small>Workstation</small>
       </span>
     </div>
 

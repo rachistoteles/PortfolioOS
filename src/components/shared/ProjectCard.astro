@@ -21,16 +21,13 @@ const statusLabels = {
   variant === "compact" ? (
     <a class="project-card project-card--compact" href={`/projects/${project.id}`}>
       <div class="project-card__content">
-        <div class="project-card__compact-heading">
-          <p class="project-card__status">{statusLabels[project.data.status]}</p>
-          <span aria-hidden="true">↗</span>
-        </div>
+        <p class="project-card__status">{statusLabels[project.data.status]}</p>
         <h3>{project.data.title}</h3>
         <p>{project.data.description}</p>
         {project.data.technologies.length > 0 && (
           <ul class="project-card__technologies" aria-label="Technologies">
             {project.data.technologies
-              .slice(0, 3)
+              .slice(0, 2)
               .map((technology) => <li>{technology}</li>)}
           </ul>
         )}
@@ -110,34 +107,24 @@ const statusLabels = {
 
   .project-card--compact .project-card__content {
     min-width: 0;
-    padding: clamp(0.65rem, 1.25vw, 0.9rem);
-  }
-
-  .project-card__compact-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .project-card__compact-heading > span {
-    color: #82f7d5;
+    padding: 0.7rem 0.75rem;
   }
 
   .project-card--compact h3 {
     margin: 0;
     overflow: hidden;
-    font-size: clamp(1rem, 1.5vw, 1.3rem);
+    font-size: 0.95rem;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   .project-card--compact .project-card__content > p:not(.project-card__status) {
     display: -webkit-box;
-    margin: 0.4rem 0 0.55rem;
+    margin: 0.3rem 0 0.45rem;
     overflow: hidden;
     color: #9db1ac;
-    font-size: 0.72rem;
-    line-height: 1.4;
+    font-size: 0.7rem;
+    line-height: 1.35;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
   }

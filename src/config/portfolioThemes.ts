@@ -32,9 +32,9 @@ export interface PortfolioThemeDefinition {
 export const PORTFOLIO_THEMES: readonly PortfolioThemeDefinition[] = [
   {
     id: "modern",
-    name: "Modern",
-    era: "Current interface",
-    description: "A compact contemporary dashboard for projects and journal activity.",
+    name: "Modern Workstation",
+    era: "Current computer",
+    description: "A clean contemporary workstation for browsing projects and journal notes.",
     preview: {
       background: "#081018",
       panel: "#142434",
@@ -45,9 +45,9 @@ export const PORTFOLIO_THEMES: readonly PortfolioThemeDefinition[] = [
   },
   {
     id: "xp",
-    name: "PortfolioOS",
+    name: "Windows XP",
     era: "Early-2000s desktop",
-    description: "The nostalgic desktop environment with windows, explorers, and a taskbar.",
+    description: "A nostalgic desktop computer with windows, explorers, and a taskbar.",
     preview: {
       background: "#2566ae",
       panel: "#ece9d8",
@@ -59,8 +59,8 @@ export const PORTFOLIO_THEMES: readonly PortfolioThemeDefinition[] = [
   {
     id: "win98",
     name: "Windows 95/98",
-    era: "Desktop UI",
-    description: "Classic gray window chrome, bevel borders, and a Start-menu desktop.",
+    era: "Classic desktop PC",
+    description: "Gray window chrome, bevel borders, and a Start-menu desktop computer.",
     preview: {
       background: "#008080",
       panel: "#c0c0c0",
@@ -71,9 +71,9 @@ export const PORTFOLIO_THEMES: readonly PortfolioThemeDefinition[] = [
   },
   {
     id: "institutional",
-    name: "Institutional Web",
-    era: "1998–2004",
-    description: "A formal research-lab style site with masthead, sidebar, and publications.",
+    name: "Lab Terminal",
+    era: "1998–2004 campus computer",
+    description: "An institutional research-lab computer portal with masthead and publications.",
     preview: {
       background: "#f4f1e8",
       panel: "#ffffff",
@@ -84,9 +84,9 @@ export const PORTFOLIO_THEMES: readonly PortfolioThemeDefinition[] = [
   },
   {
     id: "geocities",
-    name: "Personal Homepage",
-    era: "1995–2001",
-    description: "A playful early-web shrine with badges, guestbook energy, and bright links.",
+    name: "Home Computer",
+    era: "1995–2001 personal PC",
+    description: "A playful personal-computer homepage with badges, guestbook energy, and bright links.",
     preview: {
       background: "#000080",
       panel: "#ffffcc",
@@ -97,9 +97,9 @@ export const PORTFOLIO_THEMES: readonly PortfolioThemeDefinition[] = [
   },
   {
     id: "web2",
-    name: "Web 2.0",
-    era: "2004–2010",
-    description: "Glossy panels, rounded tabs, badges, and social-dashboard modules.",
+    name: "Web 2.0 Machine",
+    era: "2004–2010 online computer",
+    description: "A glossy web-app computer with tabs, badges, and dashboard modules.",
     preview: {
       background: "#d9eef8",
       panel: "#ffffff",

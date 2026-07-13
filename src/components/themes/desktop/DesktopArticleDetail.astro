@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  publishedLabel: string;
+  relatedProject?: CollectionEntry<"projects">;
+}
+
+const { post, publishedLabel, relatedProject } = Astro.props;
+---
+
+<main class="desktop-list-shell" aria-labelledby="desktop-article-title">
+  <section class="desktop-list-window desktop-detail-window">
+    <header class="desktop-list-window__titlebar">
+      <span aria-hidden="true">📄</span>
+      <h1 id="desktop-article-title">{post.data.title}</h1>
+    </header>
+    <div class="desktop-list-window__toolbar">
+      <a href="/">Desktop</a>
+      <a href="/projects">Projects</a>
+      <a href="/blog">Journal</a>
+    </div>
+    <div class="desktop-list-window__address">
+      Address · C:\PortfolioOS\Journal\{post.id}
+    </div>
+    <div class="desktop-detail-body">
+      <p><strong>Category:</strong> {post.data.category}</p>
+      <p><strong>Published:</strong> {publishedLabel}</p>
+      <p>{post.data.description}</p>
+      <div class="desktop-detail-content">
+        <slot />
+      </div>
+      {
+        relatedProject && (
+          <p>
+            Related project file:
+            <a href={`/projects/${relatedProject.id}`}>
+              {relatedProject.data.title}
+            </a>
+          </p>
+        )
+      }
+    </div>
+  </section>
+</main>

@@ -1,0 +1,45 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  publishedLabel: string;
+  relatedProject?: CollectionEntry<"projects">;
+}
+
+const { post, publishedLabel, relatedProject } = Astro.props;
+---
+
+<main class="institutional-shell institutional-detail" aria-labelledby="lab-article-title">
+  <div class="institutional-utility">
+    <span>Publication Record · {publishedLabel}</span>
+    <a href="/blog">Return to publications</a>
+  </div>
+  <header class="institutional-masthead">
+    <p class="eyebrow">{post.data.category}</p>
+    <h1 id="lab-article-title">{post.data.title}</h1>
+    <p>{post.data.description}</p>
+  </header>
+  <nav class="institutional-nav" aria-label="Institutional">
+    <a href="/">Home</a>
+    <a href="/projects">Programs</a>
+    <a href="/blog">Publications</a>
+  </nav>
+  <article class="institutional-detail__body">
+    <div class="institutional-detail__content">
+      <slot />
+    </div>
+    {
+      relatedProject && (
+        <section>
+          <h2>Related technical program</h2>
+          <p>
+            <a href={`/projects/${relatedProject.id}`}>
+              {relatedProject.data.title}
+            </a>
+          </p>
+        </section>
+      )
+    }
+  </article>
+</main>

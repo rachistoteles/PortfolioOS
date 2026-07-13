@@ -1,0 +1,74 @@
+---
+/**
+ * Theme-specific outer chrome only.
+ * Custom case-study bodies stay unique and are rendered once by the page.
+ */
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<div class="theme-surface" data-theme-surface="modern">
+  <nav class="modern-detail__nav case-study-bar" aria-label="Workstation">
+    <a href="/">Home</a>
+    <a href="/projects">Projects</a>
+    <span aria-current="page">{title}</span>
+  </nav>
+</div>
+
+<div class="theme-surface" data-theme-surface="desktop">
+  <div class="desktop-case-bar">
+    <div class="desktop-list-window__titlebar">
+      <span aria-hidden="true">🖥️</span>
+      <strong>{title}</strong>
+    </div>
+    <div class="desktop-list-window__toolbar">
+      <a href="/">Desktop</a>
+      <a href="/projects">Projects</a>
+      <a href="/blog">Journal</a>
+    </div>
+  </div>
+</div>
+
+<div class="theme-surface" data-theme-surface="institutional">
+  <div class="institutional-shell case-study-bar">
+    <div class="institutional-utility">
+      <span>Featured program dossier</span>
+      <a href="/projects">Programs directory</a>
+    </div>
+    <nav class="institutional-nav" aria-label="Institutional">
+      <a href="/">Home</a>
+      <a href="/projects">Programs</a>
+      <span>{title}</span>
+    </nav>
+  </div>
+</div>
+
+<div class="theme-surface" data-theme-surface="geocities">
+  <div class="geocities-shell case-study-bar">
+    <div class="geocities-banner">★ Featured Project ★</div>
+    <nav class="geocities-nav" aria-label="Home computer links">
+      <a href="/">Home</a>
+      <a href="/projects">Projects</a>
+      <span>{title}</span>
+    </nav>
+  </div>
+</div>
+
+<div class="theme-surface" data-theme-surface="web2">
+  <div class="web2-shell case-study-bar">
+    <header class="web2-header">
+      <h1>
+        {title}
+        <span class="web2-beta">CASE</span>
+      </h1>
+    </header>
+    <nav class="web2-tabs" aria-label="Web 2.0 folders">
+      <a href="/">Dashboard</a>
+      <a href="/projects">Apps</a>
+      <a href="/blog">Blog</a>
+    </nav>
+  </div>
+</div>

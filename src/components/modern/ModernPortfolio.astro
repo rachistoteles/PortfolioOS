@@ -11,123 +11,82 @@ interface Props {
 
 const { projects, posts } = Astro.props;
 const featuredProjects = projects.filter((project) => project.data.featured);
-const highlightedProject = [...projects].sort(
-  (first, second) => first.data.order - second.data.order,
-)[0];
-const latestPost = [...posts].sort(
-  (first, second) =>
-    second.data.publishedAt.getTime() - first.data.publishedAt.getTime(),
-)[0];
+const latestPosts = [...posts]
+  .sort(
+    (first, second) =>
+      second.data.publishedAt.getTime() - first.data.publishedAt.getTime(),
+  )
+  .slice(0, 3);
 
 const formatDate = (date: Date) =>
   new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
-    year: "numeric",
   }).format(date);
 ---
 
 <section class="modern-dashboard" aria-labelledby="modern-title">
   <ModernSidebar client:load />
 
-  <div class="modern-dashboard__content">
-    <div class="modern-masthead">
+  <div class="modern-dashboard__content modern-dashboard__content--simple">
+    <header id="modern-overview" class="modern-home-header">
+      <div>
+        <p class="eyebrow">Workstation</p>
+        <h1 id="modern-title">Richard Vázquez</h1>
+        <p class="modern-home-header__summary">
+          Computer engineer · Independent developer · Puerto Rico
+        </p>
+      </div>
+      <div class="modern-home-header__meta" id="modern-about">
+        <span>{projects.length} projects</span>
+        <span>{posts.length} journal notes</span>
+        <a href="mailto:richardvb76@gmail.com">Email</a>
+      </div>
+    </header>
+
+    <div class="modern-home-body">
+      <section
+        id="modern-projects"
+        class="modern-home-panel"
+        aria-labelledby="featured-projects-title"
+      >
+        <header class="modern-home-panel__heading">
+          <h2 id="featured-projects-title">Projects</h2>
+          <a href="/projects">Open folder</a>
+        </header>
+        <div class="modern-project-grid">
+          {
+            featuredProjects.map((project) => (
+              <ProjectCard project={project} variant="compact" />
+            ))
+          }
+        </div>
+      </section>
+
       <aside
         id="modern-recent"
-        class="modern-recent"
+        class="modern-home-panel modern-home-panel--side"
         aria-labelledby="modern-recent-title"
       >
-        <header>
-          <div>
-            <p class="eyebrow">Activity</p>
-            <h2 id="modern-recent-title">Recent additions</h2>
-          </div>
-          <span class="modern-live-status">Live</span>
+        <header class="modern-home-panel__heading">
+          <h2 id="modern-recent-title">Journal</h2>
+          <a href="/blog">Open</a>
         </header>
-
-        <div class="modern-recent__items">
+        <ul class="modern-home-journal">
           {
-            latestPost ? (
-              <a href={`/blog/${latestPost.id}`}>
-                <span class="modern-recent__type">Latest journal entry</span>
-                <strong>{latestPost.data.title}</strong>
-                <small>{formatDate(latestPost.data.publishedAt)}</small>
-                <span class="modern-recent__arrow" aria-hidden="true">↗</span>
-              </a>
-            ) : (
-              <p>No journal entries published yet.</p>
-            )
+            latestPosts.map((post) => (
+              <li>
+                <a href={`/blog/${post.id}`}>
+                  <strong>{post.data.title}</strong>
+                  <small>
+                    {post.data.category} · {formatDate(post.data.publishedAt)}
+                  </small>
+                </a>
+              </li>
+            ))
           }
-
-          {
-            highlightedProject && (
-              <a href={`/projects/${highlightedProject.id}`}>
-                <span class="modern-recent__type">Highlighted project</span>
-                <strong>{highlightedProject.data.title}</strong>
-                <small>{highlightedProject.data.status.replace("-", " ")}</small>
-                <span class="modern-recent__arrow" aria-hidden="true">↗</span>
-              </a>
-            )
-          }
-        </div>
+        </ul>
       </aside>
-
-      <header id="modern-overview" class="modern-hero">
-        <p class="eyebrow">Computer Engineer · Independent Developer</p>
-        <h1 id="modern-title">
-          Building useful systems with visible depth.
-        </h1>
-        <p class="modern-hero__summary">
-          Full-stack products, business tools, technical experiments, and
-          development notes—designed and built from Puerto Rico.
-        </p>
-
-        <div id="modern-about" class="modern-profile-meta">
-          <div>
-            <small>Based in</small>
-            <strong>Puerto Rico, PR</strong>
-          </div>
-          <div>
-            <small>Working as</small>
-            <strong>Independent Developer</strong>
-          </div>
-          <div>
-            <small>Languages</small>
-            <strong>English · Spanish</strong>
-          </div>
-          <div>
-            <small>Published</small>
-            <strong>{projects.length} projects · {posts.length} articles</strong>
-          </div>
-        </div>
-
-        <div class="modern-hero__links">
-          <a href="mailto:richardvb76@gmail.com">Email me</a>
-          <a href="https://richardvb.netlify.app/">Portfolio archive</a>
-        </div>
-      </header>
     </div>
-
-    <section
-      id="modern-projects"
-      class="modern-projects"
-      aria-labelledby="featured-projects-title"
-    >
-      <header class="modern-projects__heading">
-        <div>
-          <p class="eyebrow">Selected work</p>
-          <h2 id="featured-projects-title">Featured projects</h2>
-        </div>
-        <a href="/projects">View all projects <span aria-hidden="true">→</span></a>
-      </header>
-
-      <div class="modern-project-grid">
-        {
-          featuredProjects.map((project) => (
-            <ProjectCard project={project} variant="compact" />
-          ))
-        }
-      </div>
-    </section>
   </div>
 </section>

@@ -1,0 +1,194 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  posts: CollectionEntry<"blog">[];
+}
+
+const { posts } = Astro.props;
+
+const formatDate = (date: Date) =>
+  new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(date);
+---
+
+<div class="theme-surface" data-theme-surface="modern">
+  <main class="modern-list-shell" aria-labelledby="modern-blog-title">
+    <header class="modern-list-shell__header">
+      <div>
+        <p class="eyebrow">Workstation / Notes</p>
+        <h1 id="modern-blog-title">Journal</h1>
+      </div>
+      <nav class="modern-list-shell__nav" aria-label="Workstation folders">
+        <a href="/">Home</a>
+        <a href="/projects">Projects</a>
+      </nav>
+    </header>
+    <ul class="modern-note-list">
+      {
+        posts.map((post) => (
+          <li>
+            <a href={`/blog/${post.id}`}>
+              <span>{post.data.category}</span>
+              <strong>{post.data.title}</strong>
+              <small>
+                {formatDate(post.data.publishedAt)} · {post.data.description}
+              </small>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</div>
+
+<div class="theme-surface" data-theme-surface="desktop">
+  <main class="desktop-list-shell" aria-labelledby="desktop-blog-title">
+    <section class="desktop-list-window">
+      <header class="desktop-list-window__titlebar">
+        <span aria-hidden="true">📄</span>
+        <h1 id="desktop-blog-title">Technical Journal</h1>
+      </header>
+      <div class="desktop-list-window__toolbar">
+        <a href="/">Desktop</a>
+        <a href="/projects">Projects</a>
+      </div>
+      <div class="desktop-list-window__address">
+        Address · C:\PortfolioOS\Journal
+      </div>
+      <table class="desktop-list-table">
+        <thead>
+          <tr>
+            <th scope="col">Document</th>
+            <th scope="col">Category</th>
+            <th scope="col">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            posts.map((post) => (
+              <tr>
+                <td>
+                  <a href={`/blog/${post.id}`}>
+                    <span aria-hidden="true">📝</span>
+                    {post.data.title}
+                  </a>
+                </td>
+                <td>{post.data.category}</td>
+                <td>{formatDate(post.data.publishedAt)}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<div class="theme-surface" data-theme-surface="institutional">
+  <main class="institutional-shell institutional-list" aria-labelledby="lab-blog-title">
+    <div class="institutional-utility">
+      <span>Publications and Research Notes</span>
+      <a href="/">Return to portal home</a>
+    </div>
+    <header class="institutional-masthead">
+      <p class="eyebrow">Technical Publications Desk</p>
+      <h1 id="lab-blog-title">Journal Bulletin</h1>
+      <p>Notes and reports published from this institutional computer.</p>
+    </header>
+    <nav class="institutional-nav" aria-label="Institutional">
+      <a href="/">Home</a>
+      <a href="/projects">Programs</a>
+      <a href="/blog" aria-current="page">Publications</a>
+    </nav>
+    <div class="institutional-list__body">
+      {
+        posts.map((post) => (
+          <article class="institutional-program">
+            <p class="institutional-meta">
+              {post.data.category} · {formatDate(post.data.publishedAt)}
+            </p>
+            <h2>
+              <a href={`/blog/${post.id}`}>{post.data.title}</a>
+            </h2>
+            <p>{post.data.description}</p>
+          </article>
+        ))
+      }
+    </div>
+  </main>
+</div>
+
+<div class="theme-surface" data-theme-surface="geocities">
+  <main class="geocities-shell" aria-labelledby="geocities-blog-title">
+    <div class="geocities-banner">
+      <span aria-hidden="true">★</span>
+      Journal Updates
+      <span aria-hidden="true">★</span>
+    </div>
+    <nav class="geocities-nav" aria-label="Home computer links">
+      <a href="/">Home</a>
+      <a href="/projects">Projects</a>
+      <a href="/blog">Journal</a>
+    </nav>
+    <div class="geocities-panel">
+      <h1 id="geocities-blog-title">What's New On My Computer</h1>
+      <div class="geocities-grid">
+        {
+          posts.map((post) => (
+            <div class="geocities-item">
+              <strong>
+                <a href={`/blog/${post.id}`}>{post.data.title}</a>
+              </strong>
+              <p>
+                {formatDate(post.data.publishedAt)} — {post.data.description}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="theme-surface" data-theme-surface="web2">
+  <main class="web2-shell" aria-labelledby="web2-blog-title">
+    <header class="web2-header">
+      <div>
+        <h1 id="web2-blog-title">
+          Blog
+          <span class="web2-beta">BETA</span>
+        </h1>
+        <p style="margin:0.25rem 0 0;opacity:0.9;font-size:0.85rem;">
+          Journal posts from this online computer.
+        </p>
+      </div>
+    </header>
+    <nav class="web2-tabs" aria-label="Web 2.0 folders">
+      <a href="/">Dashboard</a>
+      <a href="/projects">Apps</a>
+      <a href="/blog" aria-current="page">Blog</a>
+    </nav>
+    <div class="web2-layout web2-layout--single">
+      <section class="web2-widget">
+        {
+          posts.map((post) => (
+            <a class="web2-card" href={`/blog/${post.id}`}>
+              <span class="web2-badge">{formatDate(post.data.publishedAt)}</span>
+              <span class="web2-badge">{post.data.category}</span>
+              <h2 style="margin:0.45rem 0 0.25rem;font-size:1.1rem;">
+                {post.data.title}
+              </h2>
+              <p style="margin:0;color:var(--site-muted);font-size:0.85rem;">
+                {post.data.description}
+              </p>
+            </a>
+          ))
+        }
+      </section>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,54 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  publishedLabel: string;
+  relatedProject?: CollectionEntry<"projects">;
+}
+
+const { post, publishedLabel, relatedProject } = Astro.props;
+---
+
+<main class="web2-shell" aria-labelledby="web2-article-title">
+  <header class="web2-header">
+    <div>
+      <h1 id="web2-article-title">
+        {post.data.title}
+        <span class="web2-beta">POST</span>
+      </h1>
+      <p style="margin:0.25rem 0 0;opacity:0.9;font-size:0.85rem;">
+        {post.data.description}
+      </p>
+    </div>
+  </header>
+  <nav class="web2-tabs" aria-label="Web 2.0 folders">
+    <a href="/">Dashboard</a>
+    <a href="/projects">Apps</a>
+    <a href="/blog">Blog</a>
+  </nav>
+  <div class="web2-layout web2-layout--single">
+    <article class="web2-widget">
+      <span class="web2-badge">{publishedLabel}</span>
+      <span class="web2-badge">{post.data.category}</span>
+      {
+        post.data.tags.map((tag) => (
+          <span class="web2-badge">{tag}</span>
+        ))
+      }
+      <div class="web2-detail-content">
+        <slot />
+      </div>
+      {
+        relatedProject && (
+          <a class="web2-card" href={`/projects/${relatedProject.id}`}>
+            <strong>Related app: {relatedProject.data.title}</strong>
+            <p style="margin:0.25rem 0 0;color:var(--site-muted);font-size:0.8rem;">
+              {relatedProject.data.description}
+            </p>
+          </a>
+        )
+      }
+    </article>
+  </div>
+</main>

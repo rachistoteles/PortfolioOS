@@ -1,0 +1,183 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import ProjectCard from "../../shared/ProjectCard.astro";
+
+interface Props {
+  projects: CollectionEntry<"projects">[];
+}
+
+const { projects } = Astro.props;
+---
+
+<div class="theme-surface" data-theme-surface="modern">
+  <main class="modern-list-shell" aria-labelledby="modern-projects-title">
+    <header class="modern-list-shell__header">
+      <div>
+        <p class="eyebrow">Workstation / Files</p>
+        <h1 id="modern-projects-title">Projects</h1>
+      </div>
+      <nav class="modern-list-shell__nav" aria-label="Workstation folders">
+        <a href="/">Home</a>
+        <a href="/blog">Journal</a>
+      </nav>
+    </header>
+    <div class="modern-list-shell__grid">
+      {
+        projects.map((project) => (
+          <ProjectCard project={project} variant="compact" />
+        ))
+      }
+    </div>
+  </main>
+</div>
+
+<div class="theme-surface" data-theme-surface="desktop">
+  <main class="desktop-list-shell" aria-labelledby="desktop-projects-title">
+    <section class="desktop-list-window">
+      <header class="desktop-list-window__titlebar">
+        <span aria-hidden="true">📁</span>
+        <h1 id="desktop-projects-title">My Projects</h1>
+      </header>
+      <div class="desktop-list-window__toolbar">
+        <a href="/">Desktop</a>
+        <a href="/blog">Journal</a>
+      </div>
+      <div class="desktop-list-window__address">
+        Address · C:\PortfolioOS\Projects
+      </div>
+      <table class="desktop-list-table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            projects.map((project) => (
+              <tr>
+                <td>
+                  <a href={`/projects/${project.id}`}>
+                    <span aria-hidden="true">🖥️</span>
+                    {project.data.title}
+                  </a>
+                </td>
+                <td>{project.data.status.replace("-", " ")}</td>
+                <td>Project file</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<div class="theme-surface" data-theme-surface="institutional">
+  <main class="institutional-shell institutional-list" aria-labelledby="lab-projects-title">
+    <div class="institutional-utility">
+      <span>Technical Programs Directory</span>
+      <a href="/">Return to portal home</a>
+    </div>
+    <header class="institutional-masthead">
+      <p class="eyebrow">Office of Technical Projects</p>
+      <h1 id="lab-projects-title">Programs and Initiatives</h1>
+      <p>Documented applications maintained on this institutional computer portal.</p>
+    </header>
+    <nav class="institutional-nav" aria-label="Institutional">
+      <a href="/">Home</a>
+      <a href="/projects" aria-current="page">Programs</a>
+      <a href="/blog">Publications</a>
+    </nav>
+    <div class="institutional-list__body">
+      {
+        projects.map((project) => (
+          <article class="institutional-program">
+            <h2>
+              <a href={`/projects/${project.id}`}>{project.data.title}</a>
+            </h2>
+            <p class="institutional-meta">
+              Status: {project.data.status.replace("-", " ")}
+            </p>
+            <p>{project.data.description}</p>
+          </article>
+        ))
+      }
+    </div>
+  </main>
+</div>
+
+<div class="theme-surface" data-theme-surface="geocities">
+  <main class="geocities-shell" aria-labelledby="geocities-projects-title">
+    <div class="geocities-banner">
+      <span aria-hidden="true">★</span>
+      Project Shrine
+      <span aria-hidden="true">★</span>
+    </div>
+    <nav class="geocities-nav" aria-label="Home computer links">
+      <a href="/">Home</a>
+      <a href="/projects">Projects</a>
+      <a href="/blog">Journal</a>
+    </nav>
+    <div class="geocities-panel">
+      <h1 id="geocities-projects-title">My Project Collection</h1>
+      <div class="geocities-grid">
+        {
+          projects.map((project) => (
+            <div class="geocities-item">
+              <strong>
+                <a href={`/projects/${project.id}`}>{project.data.title}</a>
+              </strong>
+              <p>{project.data.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="theme-surface" data-theme-surface="web2">
+  <main class="web2-shell" aria-labelledby="web2-projects-title">
+    <header class="web2-header">
+      <div>
+        <h1 id="web2-projects-title">
+          Apps
+          <span class="web2-beta">BETA</span>
+        </h1>
+        <p style="margin:0.25rem 0 0;opacity:0.9;font-size:0.85rem;">
+          Browse applications on this Web 2.0 machine.
+        </p>
+      </div>
+    </header>
+    <nav class="web2-tabs" aria-label="Web 2.0 folders">
+      <a href="/">Dashboard</a>
+      <a href="/projects" aria-current="page">Apps</a>
+      <a href="/blog">Blog</a>
+    </nav>
+    <div class="web2-layout web2-layout--single">
+      <section class="web2-widget">
+        {
+          projects.map((project) => (
+            <a class="web2-card" href={`/projects/${project.id}`}>
+              <span class="web2-badge web2-badge--status">
+                {project.data.status.replace("-", " ")}
+              </span>
+              {project.data.technologies.slice(0, 3).map((technology) => (
+                <span class="web2-badge">{technology}</span>
+              ))}
+              <h2 style="margin:0.45rem 0 0.25rem;font-size:1.1rem;">
+                {project.data.title}
+              </h2>
+              <p style="margin:0;color:var(--site-muted);font-size:0.85rem;">
+                {project.data.description}
+              </p>
+            </a>
+          ))
+        }
+      </section>
+    </div>
+  </main>
+</div>

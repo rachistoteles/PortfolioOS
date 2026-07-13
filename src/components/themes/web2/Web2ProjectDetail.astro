@@ -1,0 +1,64 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface RelatedPost {
+  id: string;
+  title: string;
+  description: string;
+}
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  relatedPosts: RelatedPost[];
+  statusLabel: string;
+}
+
+const { project, relatedPosts, statusLabel } = Astro.props;
+---
+
+<main class="web2-shell" aria-labelledby="web2-project-title">
+  <header class="web2-header">
+    <div>
+      <h1 id="web2-project-title">
+        {project.data.title}
+        <span class="web2-beta">APP</span>
+      </h1>
+      <p style="margin:0.25rem 0 0;opacity:0.9;font-size:0.85rem;">
+        {project.data.description}
+      </p>
+    </div>
+  </header>
+  <nav class="web2-tabs" aria-label="Web 2.0 folders">
+    <a href="/">Dashboard</a>
+    <a href="/projects">Apps</a>
+    <a href="/blog">Blog</a>
+  </nav>
+  <div class="web2-layout web2-layout--single">
+    <article class="web2-widget">
+      <span class="web2-badge web2-badge--status">{statusLabel}</span>
+      {
+        project.data.technologies.map((technology) => (
+          <span class="web2-badge">{technology}</span>
+        ))
+      }
+      <div class="web2-detail-content">
+        <slot />
+      </div>
+      {
+        relatedPosts.length > 0 && (
+          <section>
+            <h2>Related posts</h2>
+            {relatedPosts.map((post) => (
+              <a class="web2-card" href={`/blog/${post.id}`}>
+                <strong>{post.title}</strong>
+                <p style="margin:0.25rem 0 0;color:var(--site-muted);font-size:0.8rem;">
+                  {post.description}
+                </p>
+              </a>
+            ))}
+          </section>
+        )
+      }
+    </article>
+  </div>
+</main>

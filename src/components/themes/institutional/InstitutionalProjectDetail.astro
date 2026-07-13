@@ -1,0 +1,61 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface RelatedPost {
+  id: string;
+  title: string;
+  description: string;
+}
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  relatedPosts: RelatedPost[];
+  statusLabel: string;
+}
+
+const { project, relatedPosts, statusLabel } = Astro.props;
+---
+
+<main class="institutional-shell institutional-detail" aria-labelledby="lab-project-title">
+  <div class="institutional-utility">
+    <span>Technical Program Record</span>
+    <a href="/projects">Return to programs directory</a>
+  </div>
+  <header class="institutional-masthead">
+    <p class="eyebrow">{statusLabel}</p>
+    <h1 id="lab-project-title">{project.data.title}</h1>
+    <p>{project.data.description}</p>
+  </header>
+  <nav class="institutional-nav" aria-label="Institutional">
+    <a href="/">Home</a>
+    <a href="/projects">Programs</a>
+    <a href="/blog">Publications</a>
+  </nav>
+  <article class="institutional-detail__body">
+    {
+      project.data.technologies.length > 0 && (
+        <p class="institutional-meta">
+          Technical methods: {project.data.technologies.join(" · ")}
+        </p>
+      )
+    }
+    <div class="institutional-detail__content">
+      <slot />
+    </div>
+    {
+      relatedPosts.length > 0 && (
+        <section>
+          <h2>Related publications</h2>
+          <ul>
+            {relatedPosts.map((post) => (
+              <li>
+                <a href={`/blog/${post.id}`}>{post.title}</a>
+                <div class="institutional-meta">{post.description}</div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </article>
+</main>

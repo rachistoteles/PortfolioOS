@@ -1,0 +1,51 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface RelatedPost {
+  id: string;
+  title: string;
+}
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  relatedPosts: RelatedPost[];
+  statusLabel: string;
+}
+
+const { project, relatedPosts, statusLabel } = Astro.props;
+---
+
+<main class="geocities-shell" aria-labelledby="geocities-project-title">
+  <div class="geocities-banner">
+    <span aria-hidden="true">★</span>
+    Project Page
+    <span aria-hidden="true">★</span>
+  </div>
+  <nav class="geocities-nav" aria-label="Home computer links">
+    <a href="/">Home</a>
+    <a href="/projects">Project Shrine</a>
+    <a href="/blog">Journal</a>
+  </nav>
+  <div class="geocities-panel">
+    <h1 id="geocities-project-title">{project.data.title}</h1>
+    <p><strong>Status:</strong> {statusLabel}</p>
+    <p>{project.data.description}</p>
+    <div class="geocities-detail-content">
+      <slot />
+    </div>
+    {
+      relatedPosts.length > 0 && (
+        <section>
+          <h2>Related journal updates</h2>
+          <ul>
+            {relatedPosts.map((post) => (
+              <li>
+                <a href={`/blog/${post.id}`}>{post.title}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </div>
+</main>
