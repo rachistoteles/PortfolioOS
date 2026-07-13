@@ -139,19 +139,30 @@ a {
 
 /* XP MODE */
 
-html[data-theme="xp"] {
+html[data-theme="xp"],
+html[data-portfolio-theme="xp"] {
+  --site-bg: #3a6ea5;
+  --site-panel: #ece9d8;
+  --site-panel-alt: #ffffff;
+  --site-text: #111111;
+  --site-muted: #444444;
+  --site-border: #7f9db9;
+  --site-link: #003399;
+  --site-accent: #0a58d9;
+  --site-focus: #ffb000;
+  --site-font-body: Tahoma, Verdana, sans-serif;
+  --site-font-heading: "Trebuchet MS", Tahoma, sans-serif;
+  --site-radius: 0.25rem;
+  --site-shadow: 4px 7px 22px rgb(0 0 0 / 20%);
   --theme-switch-background: #ece9d8;
   --theme-switch-foreground: #003399;
 }
 
-html[data-theme="xp"] body {
+html[data-theme="xp"] body,
+html[data-portfolio-theme="xp"] body {
   background: #3a6ea5;
   color: #111111;
   font-family: Tahoma, Verdana, sans-serif;
-}
-
-html[data-theme="xp"] .modern-interface {
-  display: none;
 }
 
 .xp-desktop {
@@ -247,27 +258,39 @@ html[data-theme="xp"] .modern-interface {
 
 /* MODERN MODE */
 
-html[data-theme="modern"] {
+html[data-theme="modern"],
+html[data-portfolio-theme="modern"] {
   color-scheme: dark;
 
+  --site-bg: #081018;
+  --site-panel: rgb(255 255 255 / 5%);
+  --site-panel-alt: #142434;
+  --site-text: #eaf4f1;
+  --site-muted: #9db1ac;
+  --site-border: rgb(255 255 255 / 12%);
+  --site-link: #82f7d5;
+  --site-accent: #82f7d5;
+  --site-focus: #82f7d5;
+  --site-font-body: Inter, ui-sans-serif, system-ui, sans-serif;
+  --site-font-heading: Inter, ui-sans-serif, system-ui, sans-serif;
+  --site-radius: 0.8rem;
+  --site-shadow: none;
   --focus-color: #82f7d5;
   --theme-switch-background: rgb(14 22 35 / 84%);
   --theme-switch-foreground: #ecfff9;
 }
 
-html[data-theme="modern"] body {
+html[data-theme="modern"] body,
+html[data-portfolio-theme="modern"] body {
   background:
     radial-gradient(circle at top left, #183a50, transparent 34rem),
     #081018;
   color: #eaf4f1;
 }
 
-html[data-theme="modern"] .xp-interface {
-  display: none;
-}
-
 .modern-interface,
-.modern-dashboard {
+.modern-dashboard,
+.theme-surface[data-theme-surface="modern"] {
   height: calc(100vh - var(--master-topbar-height));
   min-height: 32rem;
 }
@@ -489,27 +512,7 @@ html[data-theme="modern"] .xp-interface {
 /* SHARED PLACEHOLDER */
 
 .about-placeholder {
-  width: min(100% - 2rem, 60rem);
-  margin: 0 auto;
-  padding: 5rem 0;
-}
-
-html[data-theme="xp"] .about-placeholder {
   display: none;
-}
-
-html[data-theme="modern"] .about-placeholder {
-  display: none;
-}
-
-.about-placeholder h2 {
-  margin: 0;
-  font-size: clamp(2rem, 6vw, 4.5rem);
-}
-
-.about-placeholder > p:not(.eyebrow, .todo-note) {
-  max-width: 45rem;
-  line-height: 1.7;
 }
 
 @media (max-width: 720px) {
@@ -563,7 +566,8 @@ html[data-theme="modern"] .about-placeholder {
   }
 
   .modern-interface,
-  .modern-dashboard {
+  .modern-dashboard,
+  .theme-surface[data-theme-surface="modern"] {
     height: auto;
     min-height: calc(100vh - var(--master-topbar-height));
   }

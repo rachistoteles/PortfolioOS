@@ -1,0 +1,114 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  projects: CollectionEntry<"projects">[];
+  posts: CollectionEntry<"blog">[];
+}
+
+const { projects, posts } = Astro.props;
+const shrine = projects.slice(0, 4);
+const updates = posts.slice(0, 3);
+const visitorCount = 1337 + projects.length * 42 + posts.length * 17;
+const updated = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+}).format(new Date());
+---
+
+<section class="geocities-shell" aria-label="Personal homepage">
+  <div class="geocities-banner">
+    <span aria-hidden="true">★</span>
+    Welcome to my homepage!!!
+    <span aria-hidden="true">★</span>
+  </div>
+
+  <p>
+    Hi, I'm <strong>Richard Vázquez Burgos</strong> —
+    <span class="geocities-blink">Computer Engineer</span> from Puerto Rico.
+  </p>
+
+  <nav class="geocities-nav" aria-label="Personal homepage links">
+    <a href="/">Home</a>
+    <a href="/projects">Project Shrine</a>
+    <a href="/blog">Journal Updates</a>
+    <a href="mailto:richardvb76@gmail.com">Email Me</a>
+  </nav>
+
+  <div class="geocities-panel">
+    <h2>✦ About Me ✦</h2>
+    <p>
+      This page showcases my applications, experiments, coding guides, and
+      development notes. Best viewed with enthusiasm and a modern browser.
+    </p>
+    <p>
+      <span class="geocities-blink" aria-hidden="true">🚧</span>
+      Under construction forever (in a charming way)
+      <span class="geocities-blink" aria-hidden="true">🚧</span>
+    </p>
+  </div>
+
+  <div class="geocities-panel">
+    <h2>✦ Project Shrine ✦</h2>
+    <div class="geocities-grid">
+      {
+        shrine.map((project) => (
+          <div class="geocities-item">
+            <strong>
+              <a href={`/projects/${project.id}`}>{project.data.title}</a>
+            </strong>
+            <p>{project.data.description}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="geocities-panel">
+    <h2>✦ Journal Updates ✦</h2>
+    <div class="geocities-grid">
+      {
+        updates.map((post) => (
+          <div class="geocities-item">
+            <strong>
+              <a href={`/blog/${post.id}`}>{post.data.title}</a>
+            </strong>
+            <p>{post.data.description}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="geocities-panel">
+    <h2>✦ Cool Links ✦</h2>
+    <p>
+      <a href="/projects">All projects</a> ·
+      <a href="/blog">Technical journal</a> ·
+      <a href="https://richardvb.netlify.app/">Archive portfolio</a> ·
+      <a href="mailto:richardvb76@gmail.com">Guestbook (email)</a>
+    </p>
+  </div>
+
+  <div class="geocities-badges" aria-label="Decorative web badges">
+    <span class="geocities-badge">HTML With Feeling</span>
+    <span class="geocities-badge">Best Viewed Anywhere</span>
+    <span class="geocities-badge">Made in Puerto Rico</span>
+    <span class="geocities-badge">Member of PortfolioOS Web Ring</span>
+  </div>
+
+  <div class="geocities-counter" aria-label="Decorative visitor counter">
+    Visitors: {String(visitorCount).padStart(7, "0")}
+  </div>
+
+  <footer class="geocities-footer">
+    <p>Last updated: {updated}</p>
+    <p>
+      <a href="mailto:richardvb76@gmail.com">Email me</a> ·
+      Site map:
+      <a href="/projects">Projects</a> /
+      <a href="/blog">Journal</a>
+    </p>
+  </footer>
+</section>

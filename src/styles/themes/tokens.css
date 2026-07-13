@@ -1,0 +1,74 @@
+:root {
+  --site-bg: #ffffff;
+  --site-panel: #ffffff;
+  --site-panel-alt: #f5f5f5;
+  --site-text: #111111;
+  --site-muted: #555555;
+  --site-border: #cccccc;
+  --site-link: #003399;
+  --site-accent: #2563eb;
+  --site-focus: #ffb000;
+  --site-font-body: Inter, ui-sans-serif, system-ui, sans-serif;
+  --site-font-heading: Inter, ui-sans-serif, system-ui, sans-serif;
+  --site-radius: 0.5rem;
+  --site-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+}
+
+.theme-surface {
+  display: none;
+}
+
+:root[data-portfolio-theme="xp"] .theme-surface[data-theme-surface="desktop"],
+:root[data-portfolio-theme="win98"] .theme-surface[data-theme-surface="desktop"],
+:root[data-portfolio-theme="modern"] .theme-surface[data-theme-surface="modern"],
+:root[data-portfolio-theme="institutional"] .theme-surface[data-theme-surface="institutional"],
+:root[data-portfolio-theme="geocities"] .theme-surface[data-theme-surface="geocities"],
+:root[data-portfolio-theme="web2"] .theme-surface[data-theme-surface="web2"] {
+  display: block;
+}
+
+.content-shell {
+  width: min(100% - 2rem, 68rem);
+  margin: 0 auto;
+  padding: 2rem 0 4rem;
+  color: var(--site-text);
+  font-family: var(--site-font-body);
+}
+
+.content-shell a {
+  color: var(--site-link);
+}
+
+.content-shell .content-card,
+.content-shell article.journal-entry,
+.content-shell .project-card:not(.project-card--compact) {
+  border: 1px solid var(--site-border);
+  border-radius: var(--site-radius);
+  background: var(--site-panel);
+  box-shadow: var(--site-shadow);
+}
+
+/* Protect custom case studies from theme chrome leakage. */
+.custom-project-page {
+  isolation: isolate;
+}
+
+.case-study-chrome {
+  padding-top: 0.75rem;
+}
+
+.case-study-chrome .site-chrome-nav {
+  margin-bottom: 0.75rem;
+}
+
+.site-chrome-nav {
+  display: flex;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.site-chrome-nav a {
+  color: var(--site-link);
+}

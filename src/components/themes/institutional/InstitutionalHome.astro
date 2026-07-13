@@ -1,0 +1,106 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  projects: CollectionEntry<"projects">[];
+  posts: CollectionEntry<"blog">[];
+}
+
+const { projects, posts } = Astro.props;
+const featured = projects.filter((project) => project.data.featured).slice(0, 4);
+const latestPosts = [...posts]
+  .sort(
+    (first, second) =>
+      second.data.publishedAt.getTime() - first.data.publishedAt.getTime(),
+  )
+  .slice(0, 3);
+
+const updated = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+}).format(new Date());
+---
+
+<section class="institutional-shell" aria-label="Institutional portfolio">
+  <div class="institutional-utility">
+    <span>Richard Vázquez Burgos · Computer Engineering Portfolio</span>
+    <span>Last updated: {updated}</span>
+  </div>
+
+  <header class="institutional-masthead">
+    <p class="eyebrow">Office of Technical Projects</p>
+    <h1>PortfolioOS Research Portal</h1>
+    <p>
+      Applications, experiments, and technical publications maintained by
+      Richard Vázquez Burgos.
+    </p>
+  </header>
+
+  <nav class="institutional-nav" aria-label="Institutional primary">
+    <a href="/">Home</a>
+    <a href="/projects">Programs</a>
+    <a href="/blog">Publications</a>
+    <a href="mailto:richardvb76@gmail.com">Contact</a>
+  </nav>
+
+  <div class="institutional-layout">
+    <aside class="institutional-side" aria-label="Section navigation">
+      <h2>Site index</h2>
+      <ul>
+        <li><a href="/projects">Technical programs</a></li>
+        <li><a href="/blog">Research notes</a></li>
+        <li><a href="mailto:richardvb76@gmail.com">Directory contact</a></li>
+        <li><a href="https://richardvb.netlify.app/">Archive site</a></li>
+      </ul>
+    </aside>
+
+    <div class="institutional-main">
+      <h2>Current technical programs</h2>
+      <p class="institutional-meta">
+        Projects are presented as research initiatives with shared documentation
+        and development journals.
+      </p>
+
+      {
+        featured.map((project) => (
+          <article class="institutional-program">
+            <h3>
+              <a href={`/projects/${project.id}`}>{project.data.title}</a>
+            </h3>
+            <p class="institutional-meta">
+              Status: {project.data.status.replace("-", " ")}
+            </p>
+            <p>{project.data.description}</p>
+          </article>
+        ))
+      }
+    </div>
+
+    <aside class="institutional-notices" aria-label="Notices">
+      <h2>News / Notices</h2>
+      <ul>
+        {
+          latestPosts.map((post) => (
+            <li>
+              <a href={`/blog/${post.id}`}>{post.data.title}</a>
+              <div class="institutional-meta">
+                {post.data.publishedAt.toLocaleDateString("en-US")}
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </aside>
+  </div>
+
+  <footer class="institutional-footer">
+    <p>
+      © {new Date().getFullYear()} Richard Vázquez Burgos · PortfolioOS ·
+      <a href="/projects">Sitemap: Projects</a> ·
+      <a href="/blog">Journal</a> ·
+      <a href="mailto:richardvb76@gmail.com">Contact</a>
+    </p>
+    <p>Printer-friendly presentation · Static institutional archive</p>
+  </footer>
+</section>

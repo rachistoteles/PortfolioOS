@@ -1,0 +1,183 @@
+:root[data-portfolio-theme="win98"] {
+  --site-bg: #008080;
+  --site-panel: #c0c0c0;
+  --site-panel-alt: #dfdfdf;
+  --site-text: #000000;
+  --site-muted: #404040;
+  --site-border: #808080;
+  --site-link: #000080;
+  --site-accent: #000080;
+  --site-focus: #000000;
+  --site-font-body: "MS Sans Serif", Tahoma, Arial, sans-serif;
+  --site-font-heading: "MS Sans Serif", Tahoma, Arial, sans-serif;
+  --site-radius: 0;
+  --site-shadow: none;
+  --focus-color: #000000;
+  --theme-switch-background: #c0c0c0;
+  --theme-switch-foreground: #000000;
+  color-scheme: light;
+}
+
+:root[data-portfolio-theme="win98"] body {
+  background: #008080;
+  color: #000;
+  font-family: var(--site-font-body);
+}
+
+:root[data-portfolio-theme="win98"] .modern-interface,
+:root[data-portfolio-theme="win98"] .xp-welcome {
+  /* surfaces handled via theme-surface */
+}
+
+:root[data-portfolio-theme="win98"] .xp-desktop {
+  background: #008080;
+}
+
+:root[data-portfolio-theme="win98"] .xp-wallpaper {
+  background: #008080;
+}
+
+:root[data-portfolio-theme="win98"] .xp-wallpaper::after {
+  display: none;
+}
+
+:root[data-portfolio-theme="win98"] .desktop-window {
+  border: 2px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  box-shadow: 2px 2px 0 #00000055 !important;
+}
+
+:root[data-portfolio-theme="win98"] .desktop-window__titlebar {
+  border-bottom: 1px solid #000080;
+  background: #000080 !important;
+  color: #fff !important;
+  border-radius: 0;
+  font-family: "MS Sans Serif", Tahoma, Arial, sans-serif;
+  text-shadow: none;
+}
+
+:root[data-portfolio-theme="win98"] .desktop-window--active .desktop-window__titlebar {
+  background: linear-gradient(90deg, #000080, #1084d0) !important;
+}
+
+:root[data-portfolio-theme="win98"] .desktop-window__controls button {
+  width: 1.1rem;
+  height: 1rem;
+  border: 1px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  border-radius: 0;
+  background: #c0c0c0;
+  box-shadow: none;
+  color: #000;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+:root[data-portfolio-theme="win98"] .desktop-window__controls .desktop-window__close {
+  background: #c0c0c0;
+  color: #000;
+}
+
+:root[data-portfolio-theme="win98"] .desktop-window__menubar,
+:root[data-portfolio-theme="win98"] .desktop-window__toolbar,
+:root[data-portfolio-theme="win98"] .desktop-window__addressbar,
+:root[data-portfolio-theme="win98"] .desktop-window__content {
+  border-color: #808080;
+  background: #c0c0c0;
+}
+
+:root[data-portfolio-theme="win98"] .desktop-window__content {
+  background: #fff;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+:root[data-portfolio-theme="win98"] .xp-taskbar {
+  border-top: 2px solid #ffffff;
+  background: #c0c0c0 !important;
+  color: #000 !important;
+  box-shadow: none;
+}
+
+:root[data-portfolio-theme="win98"] .start-button {
+  border: 2px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  color: #000 !important;
+  font-family: "MS Sans Serif", Tahoma, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  text-shadow: none;
+}
+
+:root[data-portfolio-theme="win98"] .start-menu {
+  border: 2px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+}
+
+:root[data-portfolio-theme="win98"] .start-menu header {
+  background: #000080 !important;
+}
+
+:root[data-portfolio-theme="win98"] .taskbar-app {
+  border: 2px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  border-radius: 0;
+  background: #c0c0c0 !important;
+  color: #000 !important;
+  box-shadow: none;
+}
+
+:root[data-portfolio-theme="win98"] .taskbar-app--active {
+  border-color: #000000 #ffffff #ffffff #000000;
+  background: #dfdfdf !important;
+}
+
+:root[data-portfolio-theme="win98"] .taskbar-tray {
+  border-left: 2px solid #808080;
+  background: #c0c0c0 !important;
+  color: #000;
+  box-shadow: inset 1px 1px 0 #fff;
+}
+
+:root[data-portfolio-theme="win98"] .desktop-icon {
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+}
+
+:root[data-portfolio-theme="win98"] .content-shell,
+:root[data-portfolio-theme="win98"] .content-page {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  padding: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+:root[data-portfolio-theme="win98"] .project-card,
+:root[data-portfolio-theme="win98"] .journal-entry {
+  border: 2px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  border-radius: 0;
+  background: #dfdfdf;
+  box-shadow: none;
+}
+
+:root[data-portfolio-theme="win98"] .project-card h2,
+:root[data-portfolio-theme="win98"] .project-card h3,
+:root[data-portfolio-theme="win98"] .content-page h1 {
+  font-family: var(--site-font-heading);
+  font-size: 1.25rem;
+}
+
+@media (max-width: 720px) {
+  :root[data-portfolio-theme="win98"] .desktop-window {
+    border-width: 2px;
+  }
+}

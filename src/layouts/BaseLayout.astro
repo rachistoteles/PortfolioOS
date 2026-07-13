@@ -1,16 +1,25 @@
 ---
 import "../styles/global.css";
+import "../styles/themes/tokens.css";
+import "../styles/themes/win98.css";
+import "../styles/themes/institutional.css";
+import "../styles/themes/geocities.css";
+import "../styles/themes/web2.css";
+
+import PortfolioTopBar from "../components/shared/PortfolioTopBar.astro";
+import { DEFAULT_PORTFOLIO_THEME } from "../config/portfolioThemes";
 
 interface Props {
   title: string;
   description: string;
+  showTopBar?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, showTopBar = true } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" data-theme="xp">
+<html lang="en" data-portfolio-theme={DEFAULT_PORTFOLIO_THEME} data-theme="xp">
   <head>
     <meta charset="UTF-8" />
     <meta
@@ -24,15 +33,44 @@ const { title, description } = Astro.props;
     <title>{title}</title>
 
     <script is:inline>
-      const savedTheme = localStorage.getItem("portfolio-theme");
+      (function () {
+        var key = "portfolio-theme";
+        var allowed = [
+          "modern",
+          "xp",
+          "win98",
+          "institutional",
+          "geocities",
+          "web2",
+        ];
+        var saved = null;
 
-      document.documentElement.dataset.theme =
-        savedTheme === "modern" ? "modern" : "xp";
+        try {
+          saved = localStorage.getItem(key);
+        } catch (error) {
+          saved = null;
+        }
+
+        var theme =
+          allowed.indexOf(saved) !== -1 ? saved : "xp";
+
+        document.documentElement.setAttribute(
+          "data-portfolio-theme",
+          theme,
+        );
+        document.documentElement.setAttribute(
+          "data-theme",
+          theme === "modern" ? "modern" : theme === "xp" ? "xp" : theme,
+        );
+      })();
     </script>
   </head>
 
   <body>
-    <slot />
+    <div class="portfolio-app">
+      {showTopBar && <PortfolioTopBar />}
+      <slot />
+    </div>
 
     <!--
       TODO(Codex):

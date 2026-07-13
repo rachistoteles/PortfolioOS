@@ -16,11 +16,14 @@ const posts = (await getCollection("blog"))
   title="Technical Journal | PortfolioOS"
   description="Coding guides, development logs, useful tools, experiments, and technical notes."
 >
-  <main class="content-page">
-    <a href="/">← Return to PortfolioOS</a>
+  <main class="content-page content-shell">
+    <nav class="site-chrome-nav" aria-label="Content navigation">
+      <a href="/">← PortfolioOS</a>
+      <a href="/projects">Projects</a>
+    </nav>
 
     <header>
-      <p>PortfolioOS / Technical Journal</p>
+      <p class="eyebrow">PortfolioOS / Technical Journal</p>
       <h1>Blog</h1>
       <p>
         Development logs, coding guides, Linux tools, debugging notes,
@@ -28,17 +31,19 @@ const posts = (await getCollection("blog"))
       </p>
     </header>
 
-    <div>
+    <div class="journal-list">
       {
         posts.map((post) => (
-          <article>
-            <p>
+          <article class="journal-entry">
+            <p class="eyebrow">
               {post.data.category}
               {" · "}
               {post.data.publishedAt.toLocaleDateString("en-US")}
             </p>
 
-            <h2>{post.data.title}</h2>
+            <h2>
+              <a href={`/blog/${post.id}`}>{post.data.title}</a>
+            </h2>
             <p>{post.data.description}</p>
             <a href={`/blog/${post.id}`}>Read article</a>
           </article>
@@ -57,22 +62,35 @@ const posts = (await getCollection("blog"))
   .content-page {
     width: min(100% - 2rem, 68rem);
     margin: 0 auto;
-    padding: 5rem 0;
+    padding: 2rem 0 4rem;
   }
 
   header {
     max-width: 48rem;
-    margin: 4rem 0;
+    margin: 1.5rem 0 2rem;
   }
 
   h1 {
     margin: 0;
-    font-size: clamp(3rem, 10vw, 7rem);
+    font-family: var(--site-font-heading, inherit);
+    font-size: clamp(2rem, 6vw, 4rem);
   }
 
-  article {
-    margin: 1rem 0;
-    padding: 1.5rem;
-    border: 1px solid currentColor;
+  .journal-list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .journal-entry {
+    margin: 0;
+    padding: 1.25rem;
+    border: 1px solid var(--site-border, currentColor);
+    border-radius: var(--site-radius, 0);
+    background: var(--site-panel, transparent);
+  }
+
+  .journal-entry h2 {
+    margin: 0.35rem 0;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
   }
 </style>

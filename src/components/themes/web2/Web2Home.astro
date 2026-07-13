@@ -1,0 +1,151 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  projects: CollectionEntry<"projects">[];
+  posts: CollectionEntry<"blog">[];
+}
+
+const { projects, posts } = Astro.props;
+const featured = projects.filter((project) => project.data.featured);
+const latestPosts = [...posts]
+  .sort(
+    (first, second) =>
+      second.data.publishedAt.getTime() - first.data.publishedAt.getTime(),
+  )
+  .slice(0, 4);
+
+const tags = Array.from(
+  new Set(posts.flatMap((post) => post.data.tags).concat(
+    projects.flatMap((project) => project.data.technologies),
+  )),
+).slice(0, 12);
+---
+
+<section class="web2-shell" aria-label="Web 2.0 portfolio">
+  <header class="web2-header">
+    <div>
+      <h1>
+        PortfolioOS
+        <span class="web2-beta">BETA</span>
+      </h1>
+      <p style="margin:0.25rem 0 0;opacity:0.9;font-size:0.85rem;">
+        Share apps, track builds, and follow the journal.
+      </p>
+    </div>
+    <form class="web2-search" action="/projects" method="get" role="search">
+      <label class="visually-hidden" for="web2-search">Search projects</label>
+      <input id="web2-search" type="search" name="q" placeholder="Search apps..." />
+      <button type="submit">Go</button>
+    </form>
+  </header>
+
+  <nav class="web2-tabs" aria-label="Web 2.0 sections">
+    <a href="/" aria-current="page">Dashboard</a>
+    <a href="/projects">Apps</a>
+    <a href="/blog">Blog</a>
+    <a href="mailto:richardvb76@gmail.com">Contact</a>
+  </nav>
+
+  <div class="web2-layout">
+    <div>
+      <section class="web2-widget" aria-labelledby="web2-featured">
+        <h2 id="web2-featured">Featured applications</h2>
+        {
+          featured.map((project) => (
+            <a class="web2-card" href={`/projects/${project.id}`}>
+              <div>
+                <span class="web2-badge web2-badge--status">
+                  {project.data.status.replace("-", " ")}
+                </span>
+                {project.data.technologies.slice(0, 3).map((technology) => (
+                  <span class="web2-badge">{technology}</span>
+                ))}
+              </div>
+              <h3 style="margin:0.45rem 0 0.25rem;font-size:1.15rem;">
+                {project.data.title}
+              </h3>
+              <p style="margin:0;color:var(--site-muted);font-size:0.85rem;">
+                {project.data.description}
+              </p>
+              <div style="margin-top:0.65rem;" class="web2-progress" aria-hidden="true">
+                <span style={`width:${project.data.featured ? "78%" : "55%"}`}></span>
+              </div>
+              <span class="web2-button" style="display:inline-block;margin-top:0.65rem;">
+                Open app page
+              </span>
+            </a>
+          ))
+        }
+      </section>
+
+      <section class="web2-widget" style="margin-top:0.85rem;" aria-labelledby="web2-blog">
+        <h2 id="web2-blog">
+          Latest blog entries
+          <span aria-hidden="true" title="RSS style">◎</span>
+        </h2>
+        {
+          latestPosts.map((post) => (
+            <a class="web2-card" href={`/blog/${post.id}`}>
+              <span class="web2-badge">
+                {post.data.publishedAt.toLocaleDateString("en-US")}
+              </span>
+              <span class="web2-badge">{post.data.category}</span>
+              <h3 style="margin:0.45rem 0 0.25rem;font-size:1.05rem;">
+                {post.data.title}
+              </h3>
+              <p style="margin:0;color:var(--site-muted);font-size:0.82rem;">
+                {post.data.description}
+              </p>
+              <p style="margin:0.45rem 0 0;font-size:0.75rem;color:var(--site-muted);">
+                by Richard Vázquez · related activity
+              </p>
+            </a>
+          ))
+        }
+      </section>
+    </div>
+
+    <aside>
+      <section class="web2-widget" aria-labelledby="web2-profile">
+        <h2 id="web2-profile">Profile widget</h2>
+        <p><strong>Richard Vázquez</strong></p>
+        <p style="color:var(--site-muted);font-size:0.82rem;">
+          Independent developer · Puerto Rico
+        </p>
+        <p style="font-size:0.82rem;">
+          {projects.length} apps · {posts.length} posts
+        </p>
+        <a class="web2-button" href="mailto:richardvb76@gmail.com">Message</a>
+      </section>
+
+      <section class="web2-widget" style="margin-top:0.85rem;" aria-labelledby="web2-tags">
+        <h2 id="web2-tags">Tag cloud</h2>
+        <div class="web2-tagcloud">
+          {tags.map((tag) => <span>{tag}</span>)}
+        </div>
+      </section>
+
+      <section class="web2-widget" style="margin-top:0.85rem;" aria-labelledby="web2-activity">
+        <h2 id="web2-activity">Activity</h2>
+        <p style="margin:0;font-size:0.8rem;color:var(--site-muted);">
+          New builds, journal posts, and project updates appear here as the
+          portfolio grows.
+        </p>
+      </section>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

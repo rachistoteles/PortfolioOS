@@ -13,11 +13,14 @@ const projects = (await getCollection("projects")).sort(
   title="Projects | PortfolioOS"
   description="Applications, experiments, and technical projects developed by Richard."
 >
-  <main class="content-page">
-    <a href="/">← Return to PortfolioOS</a>
+  <main class="content-page content-shell">
+    <nav class="site-chrome-nav" aria-label="Content navigation">
+      <a href="/">← PortfolioOS</a>
+      <a href="/blog">Technical Journal</a>
+    </nav>
 
     <header>
-      <p>PortfolioOS / Projects</p>
+      <p class="eyebrow">PortfolioOS / Projects</p>
       <h1>Projects</h1>
       <p>
         Applications presented through feature demonstrations,
@@ -45,22 +48,23 @@ const projects = (await getCollection("projects")).sort(
   .content-page {
     width: min(100% - 2rem, 68rem);
     margin: 0 auto;
-    padding: 5rem 0;
+    padding: 2rem 0 4rem;
   }
 
   header {
     max-width: 48rem;
-    margin: 4rem 0;
+    margin: 1.5rem 0 2rem;
   }
 
   h1 {
     margin: 0;
-    font-size: clamp(3rem, 10vw, 7rem);
+    font-family: var(--site-font-heading, inherit);
+    font-size: clamp(2rem, 6vw, 4rem);
   }
 
   .project-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
     gap: 1rem;
   }
 </style>

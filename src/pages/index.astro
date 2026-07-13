@@ -2,7 +2,9 @@
 import { getCollection } from "astro:content";
 
 import ModernPortfolio from "../components/modern/ModernPortfolio.astro";
-import PortfolioTopBar from "../components/shared/PortfolioTopBar.astro";
+import GeoCitiesHome from "../components/themes/geocities/GeoCitiesHome.astro";
+import InstitutionalHome from "../components/themes/institutional/InstitutionalHome.astro";
+import Web2Home from "../components/themes/web2/Web2Home.astro";
 import XPDesktop from "../components/xp/XPDesktop.astro";
 import type {
   ArticleSummary,
@@ -60,41 +62,42 @@ const articleSummaries = publishedPosts
 
 <BaseLayout
   title="PortfolioOS | Richard's Developer Portfolio"
-  description="A dual-interface developer portfolio containing projects, demonstrations, coding guides, and development logs."
+  description="A multi-era developer portfolio containing projects, demonstrations, coding guides, and development logs."
 >
-  <div class="portfolio-app">
-    <PortfolioTopBar />
-    <main class="portfolio-main">
-    <div class="xp-interface">
+  <main class="portfolio-main">
+    <div class="theme-surface" data-theme-surface="desktop">
       <XPDesktop
         projects={projectSummaries}
         articles={articleSummaries}
       />
     </div>
 
-    <div class="modern-interface">
+    <div class="theme-surface" data-theme-surface="modern">
       <ModernPortfolio
         projects={projects}
         posts={publishedPosts}
       />
     </div>
 
-    <section id="about" class="about-placeholder">
-      <p class="eyebrow">About</p>
-      <h2>Richard Vázquez Burgos</h2>
+    <div class="theme-surface" data-theme-surface="institutional">
+      <InstitutionalHome
+        projects={projects}
+        posts={publishedPosts}
+      />
+    </div>
 
-      <p>
-        Computer engineer and application developer building
-        full-stack tools, creative software, and experimental
-        mathematical systems.
-      </p>
+    <div class="theme-surface" data-theme-surface="geocities">
+      <GeoCitiesHome
+        projects={projects}
+        posts={publishedPosts}
+      />
+    </div>
 
-      <p class="todo-note">
-        TODO(Codex): Replace this placeholder with the complete
-        biography, experience, skills, résumé link, contact methods,
-        and current technical focus.
-      </p>
-    </section>
-    </main>
-  </div>
+    <div class="theme-surface" data-theme-surface="web2">
+      <Web2Home
+        projects={projects}
+        posts={publishedPosts}
+      />
+    </div>
+  </main>
 </BaseLayout>

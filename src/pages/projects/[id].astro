@@ -77,28 +77,35 @@ const caseStudyProject = {
 >
   {
     hasCustomCaseStudy ? (
-      <main class="custom-project-page">
-        {
-          isNexusWave ? (
-            <NexusWaveCaseStudy
-              project={caseStudyProject}
-              relatedPosts={relatedPostCards}
-            />
-          ) : isMekbuda ? (
-            <MekbudaCaseStudy
-              project={caseStudyProject}
-              relatedPosts={relatedPostCards}
-            />
-          ) : (
-            <LatticeMatrixCaseStudy
-              project={caseStudyProject}
-              relatedPosts={relatedPostCards}
-            />
-          )
-        }
-      </main>
+      <div class="case-study-chrome">
+        <nav class="site-chrome-nav content-shell" aria-label="Project chrome">
+          <a href="/">← PortfolioOS</a>
+          <a href="/projects">Projects</a>
+          <span aria-current="page">{project.data.title}</span>
+        </nav>
+        <main class="custom-project-page">
+          {
+            isNexusWave ? (
+              <NexusWaveCaseStudy
+                project={caseStudyProject}
+                relatedPosts={relatedPostCards}
+              />
+            ) : isMekbuda ? (
+              <MekbudaCaseStudy
+                project={caseStudyProject}
+                relatedPosts={relatedPostCards}
+              />
+            ) : (
+              <LatticeMatrixCaseStudy
+                project={caseStudyProject}
+                relatedPosts={relatedPostCards}
+              />
+            )
+          }
+        </main>
+      </div>
     ) : (
-      <main class="project-page">
+      <main class="project-page content-shell">
         <nav aria-label="Breadcrumb">
           <ol class="breadcrumbs">
             <li>
