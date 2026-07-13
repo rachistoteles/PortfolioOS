@@ -1,6 +1,9 @@
 ---
 import { getCollection, render } from "astro:content";
 
+import LatticeMatrixCaseStudy from "../../components/projects/lattice-matrix/LatticeMatrixCaseStudy.vue";
+import MekbudaCaseStudy from "../../components/projects/mekbuda/MekbudaCaseStudy.vue";
+import NexusWaveCaseStudy from "../../components/projects/nexus-wave/NexusWaveCaseStudy.vue";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
@@ -20,13 +23,28 @@ interface Props {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
+
 const relatedPostIds = new Set(project.data.relatedPosts);
+
 const relatedPosts = (await getCollection("blog"))
   .filter((post) => !post.data.draft && relatedPostIds.has(post.id))
   .sort(
     (first, second) =>
-      second.data.publishedAt.valueOf() - first.data.publishedAt.valueOf(),
+      second.data.publishedAt.valueOf() -
+      first.data.publishedAt.valueOf(),
   );
+
+const relatedPostCards = relatedPosts.map((post) => ({
+  title: post.data.title,
+  description: post.data.description,
+  href: `/blog/${post.id}`,
+  date: new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(post.data.publishedAt),
+  category: project.data.title,
+}));
 
 const statusLabels = {
   planning: "Planning",
@@ -34,110 +52,198 @@ const statusLabels = {
   completed: "Completed",
   archived: "Archived",
 } as const;
+
+const isNexusWave = project.id === "nexus-wave";
+const isMekbuda = project.id === "mekbuda";
+const isLatticeMatrix = project.id === "lattice-matrix";
+const hasCustomCaseStudy =
+  isNexusWave || isMekbuda || isLatticeMatrix;
+
+const caseStudyProject = {
+  title: project.data.title,
+  description: project.data.description,
+  status: project.data.status,
+  technologies: [...project.data.technologies],
+  features: project.data.features.map((feature) => ({
+    title: feature.title,
+    description: feature.description,
+  })),
+};
 ---
 
 <BaseLayout
   title={`${project.data.title} | PortfolioOS`}
   description={project.data.description}
 >
-  <main class="project-page">
-    <nav aria-label="Breadcrumb">
-      <ol class="breadcrumbs">
-        <li><a href="/">PortfolioOS</a></li>
-        <li><a href="/projects">Projects</a></li>
-        <li aria-current="page">{project.data.title}</li>
-      </ol>
-    </nav>
-
-    <article>
-      <header class="project-header">
-        <p class="eyebrow">{statusLabels[project.data.status]}</p>
-        <h1>{project.data.title}</h1>
-        <p class="project-summary">{project.data.description}</p>
-
+  {
+    hasCustomCaseStudy ? (
+      <main class="custom-project-page">
         {
-          project.data.technologies.length > 0 && (
-            <ul class="technology-list" aria-label="Technologies">
-              {project.data.technologies.map((technology) => (
-                <li>{technology}</li>
-              ))}
-            </ul>
+          isNexusWave ? (
+            <NexusWaveCaseStudy
+              project={caseStudyProject}
+              relatedPosts={relatedPostCards}
+            />
+          ) : isMekbuda ? (
+            <MekbudaCaseStudy
+              project={caseStudyProject}
+              relatedPosts={relatedPostCards}
+            />
+          ) : (
+            <LatticeMatrixCaseStudy
+              project={caseStudyProject}
+              relatedPosts={relatedPostCards}
+            />
           )
         }
+      </main>
+    ) : (
+      <main class="project-page">
+        <nav aria-label="Breadcrumb">
+          <ol class="breadcrumbs">
+            <li>
+              <a href="/">PortfolioOS</a>
+            </li>
+            <li>
+              <a href="/projects">Projects</a>
+            </li>
+            <li aria-current="page">{project.data.title}</li>
+          </ol>
+        </nav>
 
-        {
-          (project.data.repositoryUrl || project.data.liveUrl) && (
-            <div class="project-links" aria-label="Project links">
-              {project.data.liveUrl && (
-                <a href={project.data.liveUrl}>Visit live project</a>
-              )}
-              {project.data.repositoryUrl && (
-                <a href={project.data.repositoryUrl}>View source repository</a>
-              )}
-            </div>
-          )
-        }
-      </header>
+        <article>
+          <header class="project-header">
+            <p class="eyebrow">
+              {statusLabels[project.data.status]}
+            </p>
 
-      {
-        project.data.coverImage && (
-          <img
-            class="project-cover"
-            src={project.data.coverImage}
-            alt={`Preview of ${project.data.title}`}
-          />
-        )
-      }
+            <h1>{project.data.title}</h1>
 
-      <div class="project-content">
-        <Content />
-      </div>
+            <p class="project-summary">
+              {project.data.description}
+            </p>
 
-      {
-        project.data.features.length > 0 && (
-          <section class="project-section" aria-labelledby="features-heading">
-            <p class="eyebrow">Capabilities</p>
-            <h2 id="features-heading">Project features</h2>
-            <div class="feature-grid">
-              {project.data.features.map((feature) => (
-                <article class="feature-card">
-                  <h3>{feature.title}</h3>
-                  <p>{feature.description}</p>
-                  {feature.media && (
-                    <img
-                      src={feature.media}
-                      alt={`${feature.title} in ${project.data.title}`}
-                      loading="lazy"
-                    />
+            {
+              project.data.technologies.length > 0 && (
+                <ul
+                  class="technology-list"
+                  aria-label="Technologies"
+                >
+                  {project.data.technologies.map((technology) => (
+                    <li>{technology}</li>
+                  ))}
+                </ul>
+              )
+            }
+
+            {
+              (project.data.repositoryUrl ||
+                project.data.liveUrl) && (
+                <div
+                  class="project-links"
+                  aria-label="Project links"
+                >
+                  {project.data.liveUrl && (
+                    <a href={project.data.liveUrl}>
+                      Visit live project
+                    </a>
                   )}
-                </article>
-              ))}
-            </div>
-          </section>
-        )
-      }
 
-      {
-        relatedPosts.length > 0 && (
-          <section class="project-section" aria-labelledby="related-heading">
-            <p class="eyebrow">Technical journal</p>
-            <h2 id="related-heading">Related articles</h2>
-            <ul class="related-posts">
-              {relatedPosts.map((post) => (
-                <li>
-                  <a href={`/blog/${post.id}`}>{post.data.title}</a>
-                  <p>{post.data.description}</p>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )
-      }
-    </article>
-  </main>
+                  {project.data.repositoryUrl && (
+                    <a href={project.data.repositoryUrl}>
+                      View source repository
+                    </a>
+                  )}
+                </div>
+              )
+            }
+          </header>
+
+          {
+            project.data.coverImage && (
+              <img
+                class="project-cover"
+                src={project.data.coverImage}
+                alt={`Preview of ${project.data.title}`}
+              />
+            )
+          }
+
+          <div class="project-content">
+            <Content />
+          </div>
+
+          {
+            project.data.features.length > 0 && (
+              <section
+                class="project-section"
+                aria-labelledby="features-heading"
+              >
+                <p class="eyebrow">Capabilities</p>
+
+                <h2 id="features-heading">
+                  Project features
+                </h2>
+
+                <div class="feature-grid">
+                  {project.data.features.map((feature) => (
+                    <article class="feature-card">
+                      <h3>{feature.title}</h3>
+                      <p>{feature.description}</p>
+
+                      {feature.media && (
+                        <img
+                          src={feature.media}
+                          alt={`${feature.title} in ${project.data.title}`}
+                          loading="lazy"
+                        />
+                      )}
+                    </article>
+                  ))}
+                </div>
+              </section>
+            )
+          }
+
+          {
+            relatedPosts.length > 0 && (
+              <section
+                class="project-section"
+                aria-labelledby="related-heading"
+              >
+                <p class="eyebrow">Technical journal</p>
+
+                <h2 id="related-heading">
+                  Related articles
+                </h2>
+
+                <ul class="related-posts">
+                  {relatedPosts.map((post) => (
+                    <li>
+                      <a href={`/blog/${post.id}`}>
+                        {post.data.title}
+                      </a>
+
+                      <p>{post.data.description}</p>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+        </article>
+      </main>
+    )
+  }
 </BaseLayout>
 
 <style>
+  .custom-project-page {
+    width: 100%;
+    margin: 0;
+    padding: clamp(4.5rem, 7vw, 6rem) 0;
+  }
+
   .project-page {
     width: min(100% - 2rem, 68rem);
     margin: 0 auto;
@@ -223,7 +329,8 @@ const statusLabels = {
 
   .feature-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    grid-template-columns:
+      repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
     gap: 1rem;
   }
 
@@ -270,6 +377,10 @@ const statusLabels = {
   }
 
   @media (max-width: 36rem) {
+    .custom-project-page {
+      padding-top: 4.25rem;
+    }
+
     .project-page {
       padding-top: 4.5rem;
     }
